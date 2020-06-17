@@ -1,7 +1,5 @@
 package com.xtxb.cmdb.common.value;
 
-import com.xtxb.cmdb.common.model.ModelClass;
-
 import java.util.HashMap;
 import java.util.Map;
 
