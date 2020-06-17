@@ -1,13 +1,12 @@
 package com.xtxb.cmdb.common.action;
 
 /**
- * 作者: xtxb-fedora
+ * 作者: xtxb
  * <p>
  * 日期: 2020年06月17日-下午3:34
  * <p>
- * 版权说明：北京神州泰岳软件股份有限公司
  * <p>
- * TODO
+ * 动作类型
  */
 public enum ActionType {
 }
