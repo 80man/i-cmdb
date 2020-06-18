@@ -1,7 +1,5 @@
-# i-cmdb
+# i-CMDB
 
-Lightweight, reusable, out-of-the-box CMDB that supports custom business models to suit different IT environments，
++ **Lightweight**, **Reusable**, **Out-Of-The-Box** CMDB that supports custom business models to suit different IT environments，
 
-Providing the REST Ful API and page components enables quick delivery of business capabilities to customize a variety of businesses
-
-I'm back
++ Providing the REST Ful API and page components enables quick delivery of business capabilities to customize a variety of businesses
