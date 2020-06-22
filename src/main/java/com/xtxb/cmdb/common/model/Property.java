@@ -11,6 +11,7 @@ package com.xtxb.cmdb.common.model;
 public class Property {
     /*属性的唯一标识*/
     private String name;
+    private String descr;
     /*所属资源类型的名称*/
     private String cModelName;
     /*属性组，用于给属性进行分组*/
@@ -23,8 +24,7 @@ public class Property {
     private MatchRule rule;
     /*属性值校验规则值，枚举：以 | 分割的多个值； 正则：正则表达式；引用： 关联资源类型的名称*/
     private String matchRule;
-    /*属性的值是否为数组*/
-    private boolean multValue;
+
 
     public String getName() {
         return name;
@@ -74,19 +74,19 @@ public class Property {
         this.matchRule = matchRule;
     }
 
-    public boolean isMultValue() {
-        return multValue;
-    }
-
-    public void setMultValue(boolean multValue) {
-        this.multValue = multValue;
-    }
-
     public MatchRule getRule() {
         return rule;
     }
 
     public void setRule(MatchRule rule) {
         this.rule = rule;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
     }
 }
