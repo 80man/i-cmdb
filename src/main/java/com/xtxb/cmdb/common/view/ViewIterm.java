@@ -1,13 +1,12 @@
 package com.xtxb.cmdb.common.view;
 
 /**
- * 作者: xtxb-fedora
+ * 作者: xtxb
  * <p>
  * 日期: 2020年06月17日-下午3:24
  * <p>
- * 版权说明：北京神州泰岳软件股份有限公司
  * <p>
- * TODO
+ * 属性视图条目
  */
 public class ViewIterm {
     /*索引，属性的展示顺序*/
