@@ -32,6 +32,13 @@ public interface ModelService {
     public ModelClass getModelByDescr(String descr);
 
     /**
+     * 查询所有的资源类型
+
+     * @return
+     */
+    public List<ModelClass> getModels();
+
+    /**
      * 更新资源类型
      * @param modelClass
      * @return

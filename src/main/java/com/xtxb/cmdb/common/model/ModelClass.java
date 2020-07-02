@@ -19,8 +19,12 @@ public class ModelClass {
     private String descr;
     /*关联的上级类型，副类型*/
     private String parent;
-    /*此资源类型支持的动作*/
-    private List<Action> actions;
+
+    public ModelClass(String name, String descr, String parent) {
+        this.name = name;
+        this.descr = descr;
+        this.parent = parent;
+    }
 
     public String getName() {
         return name;
@@ -46,11 +50,4 @@ public class ModelClass {
         this.parent = parent;
     }
 
-    public List<Action> getActions() {
-        return actions;
-    }
-
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
-    }
 }
