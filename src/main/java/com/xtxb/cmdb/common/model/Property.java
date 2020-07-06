@@ -13,7 +13,7 @@ public class Property {
     private String name;
     private String descr;
     /*所属资源类型的名称*/
-    private String cModelName;
+    private String modelName;
     /*属性组，用于给属性进行分组*/
     private String group;
     /*属性类型，参见：@PropertyType*/
@@ -34,12 +34,12 @@ public class Property {
         this.name = name;
     }
 
-    public String getcModelName() {
-        return cModelName;
+    public String getModelName() {
+        return modelName;
     }
 
-    public void setcModelName(String cModelName) {
-        this.cModelName = cModelName;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public String getGroup() {

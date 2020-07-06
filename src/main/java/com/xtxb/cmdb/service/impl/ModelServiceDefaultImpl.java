@@ -9,6 +9,7 @@ import com.xtxb.cmdb.service.dao.ModelDBFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,14 +69,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateModel(ModelClass modelClass) throws Exception {
-        ModelClass oldModel=cacheFactory.getInstance().getModelByName(modelClass.getName());
-        if(cacheFactory.getInstance().updateModel(modelClass) ){
-            if(dbFactory.getInstance().updateModel(modelClass))
-                return true;
-            else
-                cacheFactory.getInstance().updateModel(oldModel);
-        }
-        return false;
+        return dbFactory.getInstance().updateModel(modelClass)
+                && cacheFactory.getInstance().updateModel(modelClass);
     }
 
     /**
@@ -87,13 +82,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addModel(ModelClass modelClass) throws Exception {
-        if(cacheFactory.getInstance().addModel(modelClass) ){
-            if(dbFactory.getInstance().addModel(modelClass))
-                return true;
-            else
-                cacheFactory.getInstance().deleteModel(modelClass.getName());
-        }
-        return false;
+        return dbFactory.getInstance().addModel(modelClass)
+                && cacheFactory.getInstance().addModel(modelClass);
     }
 
     /**
@@ -104,14 +94,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean deleteModel(String name) throws Exception {
-        ModelClass oldModel=cacheFactory.getInstance().getModelByName(name);
-        if(cacheFactory.getInstance().deleteModel(name) ){
-            if(dbFactory.getInstance().deleteModel(name))
-                return true;
-            else
-                cacheFactory.getInstance().addModel(oldModel);
-        }
-        return false;
+        return dbFactory.getInstance().deleteModel(name)
+                && cacheFactory.getInstance().deleteModel(name);
     }
 
     /**
@@ -123,7 +107,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public Property getProperty(String modelName, String name) {
-        return null;
+        return cacheFactory.getInstance().getProperty(modelName,name);
     }
 
     /**
@@ -134,7 +118,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public List<Property> getProperties(String modelName) {
-        return null;
+        return cacheFactory.getInstance().getProperties(modelName);
     }
 
     /**
@@ -146,7 +130,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateProperty(Property... property) throws Exception {
-        return false;
+        return updateProperty(Arrays.asList(property));
     }
 
     /**
@@ -158,7 +142,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateProperty(List<Property> propertys) throws Exception {
-        return false;
+        return dbFactory.getInstance().updateProperty(propertys) &&
+                cacheFactory.getInstance().updateProperty(propertys);
     }
 
     /**
@@ -170,7 +155,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addProperty(Property... property) throws Exception {
-        return false;
+        return addProperty(Arrays.asList(property));
     }
 
     /**
@@ -182,7 +167,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addProperty(List<Property> propertys) throws Exception {
-        return false;
+        return dbFactory.getInstance().addProperty(propertys) &&
+                cacheFactory.getInstance().addProperty(propertys);
     }
 
     /**
@@ -194,19 +180,20 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean deleteProperties(Property... property) throws Exception {
-        return false;
+        return deleteProperties(Arrays.asList(property));
     }
 
     /**
      * 删除属性定义
      *
-     * @param property
+     * @param propertys
      * @return
      * @throws Exception
      */
     @Override
-    public boolean deleteProperties(List<Property> property) throws Exception {
-        return false;
+    public boolean deleteProperties(List<Property> propertys) throws Exception {
+        return dbFactory.getInstance().deleteProperties(propertys) &&
+                cacheFactory.getInstance().deleteProperties(propertys);
     }
 
     /**
@@ -217,7 +204,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public RelationShip getRelationShip(String name) {
-        return null;
+        return cacheFactory.getInstance().getRelationShip(name);
     }
 
     /**
@@ -229,7 +216,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public List<RelationShip> getRelationShips(String modelName, boolean isSource) {
-        return null;
+        return cacheFactory.getInstance().getRelationShips(modelName,isSource);
     }
 
     /**
@@ -241,7 +228,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateRelationShip(RelationShip relationShip) throws Exception {
-        return false;
+        return cacheFactory.getInstance().updateRelationShip(relationShip);
     }
 
     /**
@@ -253,18 +240,18 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addRelationShip(RelationShip relationShip) throws Exception {
-        return false;
+        return cacheFactory.getInstance().addRelationShip(relationShip);
     }
 
     /**
      * 删除关系模型，当试图删除具有实例资源的关系模型时，会抛出异常
      *
-     * @param type 关系类型
+     * @param name 关系类型
      * @return
      * @throws Exception
      */
     @Override
-    public boolean deleteRelationShip(String type) throws Exception {
-        return false;
+    public boolean deleteRelationShip(String name) throws Exception {
+        return cacheFactory.getInstance().deleteRelationShip(name);
     }
 }

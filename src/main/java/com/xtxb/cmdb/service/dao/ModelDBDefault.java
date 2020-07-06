@@ -1,11 +1,16 @@
 package com.xtxb.cmdb.service.dao;
 
 import com.xtxb.cmdb.common.model.ModelClass;
+import com.xtxb.cmdb.common.model.Property;
+import com.xtxb.cmdb.common.model.RelationShip;
 import com.xtxb.cmdb.service.dao.springjdbc.ModelRowMapper;
+import com.xtxb.cmdb.service.dao.springjdbc.PropertyRowMapper;
+import com.xtxb.cmdb.service.dao.springjdbc.RelationShipRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,18 +24,41 @@ import java.util.List;
 @Component("defaultDB")
 public class ModelDBDefault implements ModelDB {
 
+    /*资源类型相关SQL*/
     private static final String SQL_GET_MODEL="SELECT * FROM M_META";
-    private static final String SQL_UPDATE_MODEL="UPDATE M_META SET CNNANE=? WHERE ENNAME=?";
-    private static final String SQL_ADD_MODEL="INSERT INTO M_META (ENNANE, CNNAME,PNAME) " +
+    private static final String SQL_UPDATE_MODEL="UPDATE M_META SET CNNAME=? WHERE ENNAME=?";
+    private static final String SQL_ADD_MODEL="INSERT INTO M_META (ENNAME, CNNAME,PNAME) " +
             "VALUES (?,?,?)";
     private static final String SQL_DELETE_MODEL="DELETE FROM M_META WHERE ENNAME=?";
 
+    /*资源属性相关SQL*/
+    private static final String SQL_GET_PROPERTY="SELECT * FROM P_META WHERE PNAME=?";
+    private static final String SQL_UPDATE_PROPERTY="UPDATE P_META SET  " +
+            "CNNAME=?,PNAME=? ,PGROUP=?, DEFVALUE=?, MATCHRULE=?, MATCHRULEVALUE=? WHERE ENNAME=?";
+    private static final String SQL_ADD_PROPERTY="INSERT INTO P_META (ENNAME, CNNAME,PNAME,PGROUP,PTYPE, DEFVALUE, MATCHRULE, MATCHRULEVALUE) "+
+            "VALUES (?,?,?,?,?,?,?,?)";
+    private static final String SQL_DELETE_PROPERTY="DELETE FROM P_META WHERE ENNAME=?";
+
+    /*资源关系相关SQL*/
+    private static final String SQL_GET_RELATION="SELECT * FROM R_META";
+    private static final String SQL_UPDATE_RELATION="UPDATE R_META SET  " +
+            "CNNAME=? WHERE ENNAME=?";
+    private static final String SQL_ADD_RELATION="INSERT INTO R_META (ENNAME, CNNAME,SOURCEMODEL,TARGETMODEL) "+
+            "VALUES (?,?,?,?)";
+    private static final String SQL_DELETE_RELATION="DELETE FROM R_META WHERE ENNAME=?";
 
     @Autowired
     private JdbcTemplate template;
 
     @Autowired
     private ModelRowMapper mapper;
+
+    @Autowired
+    private PropertyRowMapper propertyRowMapper;
+
+
+    @Autowired
+    private RelationShipRowMapper relshoipRowMapper;
     /**
      * 获取资源类型
      *
@@ -73,6 +101,119 @@ public class ModelDBDefault implements ModelDB {
      */
     @Override
     public boolean deleteModel(String name) throws Exception {
-        return template.update(SQL_DELETE_MODEL,name)>0;
+        return  template.update(SQL_DELETE_MODEL,name)>0;
+    }
+
+    /**
+     * 查询资源属性，根据资源类型查询
+     *
+     * @param modelName 资源类型的名称（英文名称）
+     * @return
+     */
+    @Override
+    public List<Property> getProperties(String modelName) {
+        return template.query(SQL_GET_PROPERTY,propertyRowMapper);
+    }
+
+    /**
+     * 批量更新资源属性
+     *
+     * @param propertys 资源属性集合
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean updateProperty(List<Property> propertys) throws Exception {
+        List<Object[]> rows=new ArrayList<>(propertys.size());
+        for(Property pro: propertys){
+            rows.add(new Object[]{
+                    pro.getDescr(),pro.getModelName(),pro.getGroup(),pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule()
+            });
+        }
+        return template.batchUpdate(SQL_UPDATE_PROPERTY,rows)!=null;
+    }
+
+    /**
+     * 添加资源属性
+     *
+     * @param propertys 资源属性集合
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean addProperty(List<Property> propertys) throws Exception {
+        List<Object[]> rows=new ArrayList<>(propertys.size());
+        for(Property pro: propertys){
+            rows.add(new Object[]{
+                    pro.getName(),pro.getDescr(),pro.getModelName(),pro.getGroup(),pro.getType().ordinal()+1,
+                    pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule()
+            });
+        }
+        return template.batchUpdate(SQL_ADD_PROPERTY,rows)!=null;
+    }
+
+    /**
+     * 删除属性定义
+     *
+     * @param propertys
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean deleteProperties(List<Property> propertys) throws Exception {
+        List<Object[]> rows=new ArrayList<>(propertys.size());
+        for(Property pro: propertys){
+            rows.add(new Object[]{
+                    pro.getName(),
+            });
+        }
+        return template.batchUpdate(SQL_DELETE_PROPERTY,rows)!=null;
+    }
+
+    /**
+     * 查询关系类型定义
+     *
+     * @return
+     */
+    @Override
+    public List<RelationShip> getRelationShip() {
+        return template.query(SQL_GET_RELATION,relshoipRowMapper);
+    }
+
+    /**
+     * 更新关系类型定义
+     *
+     * @param relationShip
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean updateRelationShip(RelationShip relationShip) throws Exception {
+        return template.update(SQL_UPDATE_RELATION,relationShip.getDescr(),relationShip.getName())>0;
+    }
+
+    /**
+     * 添加关系类型定义
+     *
+     * @param relationShip
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean addRelationShip(RelationShip relationShip) throws Exception {
+        return template.update(SQL_ADD_RELATION,
+                relationShip.getDescr(),relationShip.getName(),relationShip.getSourceModel(),relationShip.getTargetModel())>0;
+    }
+
+    /**
+     * 删除关系模型，当试图删除具有实例资源的关系模型时，会抛出异常
+     *
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean deleteRelationShip(String name) throws Exception {
+        return template.update(SQL_DELETE_RELATION,name)>0;
     }
 }

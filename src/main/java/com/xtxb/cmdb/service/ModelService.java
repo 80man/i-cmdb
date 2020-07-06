@@ -161,9 +161,9 @@ public interface ModelService {
 
     /**
      * 删除关系模型，当试图删除具有实例资源的关系模型时，会抛出异常
-     * @param type 关系类型
+     * @param name
      * @return
      * @throws Exception
      */
-    public boolean deleteRelationShip(String type) throws Exception;
+    public boolean deleteRelationShip(String name) throws Exception;
 }

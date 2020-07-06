@@ -19,6 +19,13 @@ public class RelationShip {
     /*关系目的段资源类型*/
     private String targetModel;
 
+    public RelationShip(String name, String descr, String sourceModel, String targetModel) {
+        this.name = name;
+        this.descr = descr;
+        this.sourceModel = sourceModel;
+        this.targetModel = targetModel;
+    }
+
     public String getName() {
         return name;
     }
