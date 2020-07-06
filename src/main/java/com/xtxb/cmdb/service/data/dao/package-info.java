@@ -7,7 +7,7 @@
  * <p>
  * TODO
  */
-package com.xtxb.cmdb.service.dao;
+package com.xtxb.cmdb.service.data.dao;
 /**
  * 当前仅支持H2 和MySQL数据库
  */

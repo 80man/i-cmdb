@@ -1,11 +1,11 @@
-package com.xtxb.cmdb.service.dao;
+package com.xtxb.cmdb.service.data.dao;
 
 import com.xtxb.cmdb.common.model.ModelClass;
 import com.xtxb.cmdb.common.model.Property;
 import com.xtxb.cmdb.common.model.RelationShip;
-import com.xtxb.cmdb.service.dao.springjdbc.ModelRowMapper;
-import com.xtxb.cmdb.service.dao.springjdbc.PropertyRowMapper;
-import com.xtxb.cmdb.service.dao.springjdbc.RelationShipRowMapper;
+import com.xtxb.cmdb.service.data.dao.springjdbc.ModelRowMapper;
+import com.xtxb.cmdb.service.data.dao.springjdbc.PropertyRowMapper;
+import com.xtxb.cmdb.service.data.dao.springjdbc.RelationShipRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

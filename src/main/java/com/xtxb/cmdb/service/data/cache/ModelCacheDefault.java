@@ -1,9 +1,9 @@
-package com.xtxb.cmdb.service.cache;
+package com.xtxb.cmdb.service.data.cache;
 
 import com.xtxb.cmdb.common.model.ModelClass;
 import com.xtxb.cmdb.common.model.Property;
 import com.xtxb.cmdb.common.model.RelationShip;
-import com.xtxb.cmdb.service.dao.ModelDBFactory;
+import com.xtxb.cmdb.service.data.DBFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ import java.util.*;
 @Component("defaultCache")
 public class ModelCacheDefault implements ModelCache {
     @Autowired
-    private ModelDBFactory dbFactory;
+    private DBFactory dbFactory;
 
     /*资源类型缓存*/
     private HashMap<String, ModelClass> enNameMap=new HashMap<>();

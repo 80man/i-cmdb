@@ -1,5 +1,6 @@
-package com.xtxb.cmdb.service.dao;
+package com.xtxb.cmdb.service.data;
 
+import com.xtxb.cmdb.service.data.dao.ModelDB;
 import com.xtxb.cmdb.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
  * 负责根据配置声明的类型获取资源类型数据库
  */
 @Component
-public class ModelDBFactory {
+public class DBFactory {
     @Value("${cmdb.db.model.name}")
     private String dbName;
 

@@ -4,8 +4,8 @@ import com.xtxb.cmdb.common.model.ModelClass;
 import com.xtxb.cmdb.common.model.Property;
 import com.xtxb.cmdb.common.model.RelationShip;
 import com.xtxb.cmdb.service.ModelService;
-import com.xtxb.cmdb.service.cache.ModelCacheFactory;
-import com.xtxb.cmdb.service.dao.ModelDBFactory;
+import com.xtxb.cmdb.service.data.CacheFactory;
+import com.xtxb.cmdb.service.data.DBFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,10 +24,10 @@ import java.util.List;
 public class ModelServiceDefaultImpl implements ModelService {
 
     @Autowired
-    private ModelCacheFactory cacheFactory;
+    private CacheFactory cacheFactory;
 
     @Autowired
-    private ModelDBFactory dbFactory;
+    private DBFactory dbFactory;
     /**
      * 根据资源类型的名称（英文名称），查询类型定义信息
      *

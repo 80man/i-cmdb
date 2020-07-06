@@ -1,4 +1,4 @@
-package com.xtxb.cmdb.service.dao.springjdbc;
+package com.xtxb.cmdb.service.data.dao.springjdbc;
 
 import com.xtxb.cmdb.common.model.ModelClass;
 import org.springframework.jdbc.core.RowMapper;

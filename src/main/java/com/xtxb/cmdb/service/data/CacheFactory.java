@@ -1,5 +1,6 @@
-package com.xtxb.cmdb.service.cache;
+package com.xtxb.cmdb.service.data;
 
+import com.xtxb.cmdb.service.data.cache.ModelCache;
 import com.xtxb.cmdb.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
  * 负责根据配置声明的类型获取资源类型缓存
  */
 @Component
-public class ModelCacheFactory {
+public class CacheFactory {
     @Value("${cmdb.cacha.model.name}")
     private String cacheName;
     private byte[] lock=new byte[1];
