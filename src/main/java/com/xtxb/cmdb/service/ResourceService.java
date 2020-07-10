@@ -49,7 +49,7 @@ public interface ResourceService {
      *               Group(GroupType.LEFT),KeyPair(property,value),Logic(LogicType.OR),KeyPair(property,value),Group(GroupType.RIGHT),Logic(LogicType.AND),KeyPair(property,value)
      * @return
      */
-    public List<Resource> queryResources(int pageIndex,int pageLen ,String user,QueryIterm... iterm) throws Exception;
+    public List<Resource> queryResources(String modelName,int pageIndex,int pageLen ,String user,QueryIterm... iterm) throws Exception;
 
     /**
      * 更新资源对象
@@ -76,7 +76,7 @@ public interface ResourceService {
      * @return
      * @throws Exception
      */
-    public long[] addResources(String user,Resource... resource) throws Exception;
+    public boolean addResources(String user,Resource... resource) throws Exception;
     /**
      * 添加资源对象
      * @param user 操作账号，当前版本仅作记录，不会影响权限
@@ -84,7 +84,7 @@ public interface ResourceService {
      * @return
      * @throws Exception
      */
-    public long[] addResources(String user,List<Resource> resources)  throws Exception;
+    public boolean addResources(String user,List<Resource> resources)  throws Exception;
 
     /**
      * 删除资源对象，删除时也会删除相关的关系数据

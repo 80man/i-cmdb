@@ -36,7 +36,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public ModelClass getModelByName(String name) {
-        return cacheFactory.getInstance().getModelByName(name);
+        return cacheFactory.getModelInstance().getModelByName(name);
     }
 
     /**
@@ -47,7 +47,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public ModelClass getModelByDescr(String descr) {
-        return cacheFactory.getInstance().getModelByDescr(descr);
+        return cacheFactory.getModelInstance().getModelByDescr(descr);
     }
 
     /**
@@ -57,7 +57,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public List<ModelClass> getModels() {
-        return cacheFactory.getInstance().getModels();
+        return cacheFactory.getModelInstance().getModels();
     }
 
     /**
@@ -69,8 +69,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateModel(ModelClass modelClass) throws Exception {
-        return dbFactory.getInstance().updateModel(modelClass)
-                && cacheFactory.getInstance().updateModel(modelClass);
+        return dbFactory.getInstanceModel().updateModel(modelClass)
+                && cacheFactory.getModelInstance().updateModel(modelClass);
     }
 
     /**
@@ -82,8 +82,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addModel(ModelClass modelClass) throws Exception {
-        return dbFactory.getInstance().addModel(modelClass)
-                && cacheFactory.getInstance().addModel(modelClass);
+        return dbFactory.getInstanceModel().addModel(modelClass)
+                && cacheFactory.getModelInstance().addModel(modelClass);
     }
 
     /**
@@ -94,8 +94,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean deleteModel(String name) throws Exception {
-        return dbFactory.getInstance().deleteModel(name)
-                && cacheFactory.getInstance().deleteModel(name);
+        return dbFactory.getInstanceModel().deleteModel(name)
+                && cacheFactory.getModelInstance().deleteModel(name);
     }
 
     /**
@@ -107,7 +107,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public Property getProperty(String modelName, String name) {
-        return cacheFactory.getInstance().getProperty(modelName,name);
+        return cacheFactory.getModelInstance().getProperty(modelName,name);
     }
 
     /**
@@ -118,7 +118,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public List<Property> getProperties(String modelName) {
-        return cacheFactory.getInstance().getProperties(modelName);
+        return cacheFactory.getModelInstance().getProperties(modelName);
     }
 
     /**
@@ -142,8 +142,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateProperty(List<Property> propertys) throws Exception {
-        return dbFactory.getInstance().updateProperty(propertys) &&
-                cacheFactory.getInstance().updateProperty(propertys);
+        return dbFactory.getInstanceModel().updateProperty(propertys) &&
+                cacheFactory.getModelInstance().updateProperty(propertys);
     }
 
     /**
@@ -167,8 +167,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addProperty(List<Property> propertys) throws Exception {
-        return dbFactory.getInstance().addProperty(propertys) &&
-                cacheFactory.getInstance().addProperty(propertys);
+        return dbFactory.getInstanceModel().addProperty(propertys) &&
+                cacheFactory.getModelInstance().addProperty(propertys);
     }
 
     /**
@@ -192,8 +192,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean deleteProperties(List<Property> propertys) throws Exception {
-        return dbFactory.getInstance().deleteProperties(propertys) &&
-                cacheFactory.getInstance().deleteProperties(propertys);
+        return dbFactory.getInstanceModel().deleteProperties(propertys) &&
+                cacheFactory.getModelInstance().deleteProperties(propertys);
     }
 
     /**
@@ -204,7 +204,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public RelationShip getRelationShip(String name) {
-        return cacheFactory.getInstance().getRelationShip(name);
+        return cacheFactory.getModelInstance().getRelationShip(name);
     }
 
     /**
@@ -216,7 +216,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public List<RelationShip> getRelationShips(String modelName, boolean isSource) {
-        return cacheFactory.getInstance().getRelationShips(modelName,isSource);
+        return cacheFactory.getModelInstance().getRelationShips(modelName,isSource);
     }
 
     /**
@@ -228,7 +228,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateRelationShip(RelationShip relationShip) throws Exception {
-        return cacheFactory.getInstance().updateRelationShip(relationShip);
+        return cacheFactory.getModelInstance().updateRelationShip(relationShip);
     }
 
     /**
@@ -240,7 +240,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addRelationShip(RelationShip relationShip) throws Exception {
-        return cacheFactory.getInstance().addRelationShip(relationShip);
+        return cacheFactory.getModelInstance().addRelationShip(relationShip);
     }
 
     /**
@@ -252,6 +252,6 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean deleteRelationShip(String name) throws Exception {
-        return cacheFactory.getInstance().deleteRelationShip(name);
+        return cacheFactory.getModelInstance().deleteRelationShip(name);
     }
 }

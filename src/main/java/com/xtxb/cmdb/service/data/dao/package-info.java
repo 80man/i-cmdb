@@ -1,11 +1,9 @@
 /**
- * 作者: xtxb-fedora
+ * 作者: xtxb
  * <p>
  * 日期: 2020年06月30日-上午9:09
  * <p>
- * 版权说明：北京神州泰岳软件股份有限公司
  * <p>
- * TODO
  */
 package com.xtxb.cmdb.service.data.dao;
 /**

@@ -19,7 +19,7 @@ import java.util.*;
  * 以HashMap模式管理的缓存，不具备集群化能力
  */
 @Lazy
-@Component("defaultCache")
+@Component("defaultModelCache")
 public class ModelCacheDefault implements ModelCache {
     @Autowired
     private DBFactory dbFactory;
@@ -37,11 +37,11 @@ public class ModelCacheDefault implements ModelCache {
      * 负责初始化缓存
      */
     @Override
-    public synchronized  void initCache() {
+    public synchronized  void init() {
         if(isInitialized)
             return;
         //资源类型缓存
-        for (ModelClass modelClass : dbFactory.getInstance().getModel()) {
+        for (ModelClass modelClass : dbFactory.getInstanceModel().getModel()) {
             enNameMap.put(modelClass.getName(),modelClass);
         }
 
@@ -52,7 +52,7 @@ public class ModelCacheDefault implements ModelCache {
             findParent(modelName,list);
             List<Property> properties=new ArrayList<>();
             for(String mc:list)
-                properties.addAll(dbFactory.getInstance().getProperties(mc));
+                properties.addAll(dbFactory.getInstanceModel().getProperties(mc));
             Map temp=new HashMap();
             for(Property property: properties){
                 temp.put(property.getName(),property);
@@ -61,7 +61,7 @@ public class ModelCacheDefault implements ModelCache {
         }
 
         //资源关系定义缓存
-        List<RelationShip> rlist=dbFactory.getInstance().getRelationShip();
+        List<RelationShip> rlist=dbFactory.getInstanceModel().getRelationShip();
         for(RelationShip rs:rlist){
             relshipHashMap.put(rs.getName(),rs);
         }

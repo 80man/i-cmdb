@@ -39,6 +39,8 @@ public class PropertyRowMapper implements RowMapper<Property> {
             property.setType(PropertyType.DATE);
         else if(type==6)
             property.setType(PropertyType.DATETIE);
+        else if(type==6)
+            property.setType(PropertyType.BOOLEAN);
         property.setDefValue(resultSet.getString("DEFVALUE"));
         int rule=resultSet.getInt("MATCHRULE");
         if(rule==1){

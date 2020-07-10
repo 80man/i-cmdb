@@ -1,7 +1,7 @@
 package com.xtxb.cmdb.common.model;
 
 /**
- * 作者: xtxb-fedora
+ * 作者: xtxb
  * <p>
  * 日期: 2020年06月17日-下午2:10
  * <p>
@@ -9,6 +9,8 @@ package com.xtxb.cmdb.common.model;
  * 用于声明属性类型
  */
 public enum PropertyType {
+    /*布尔型*/
+    BOOLEAN,
     /*字符串*/
     STRING,
     /*整形*/

@@ -1,6 +1,7 @@
 package com.xtxb.cmdb.service.data;
 
 import com.xtxb.cmdb.service.data.dao.ModelDB;
+import com.xtxb.cmdb.service.data.dao.ResourceDB;
 import com.xtxb.cmdb.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,21 +18,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class DBFactory {
     @Value("${cmdb.db.model.name}")
-    private String dbName;
+    private String dbModelName;
 
-    private byte[] lock=new byte[1];
+    @Value("${cmdb.db.resource.name}")
+    private String dbResourceName;
+
 
     @Autowired
     private SpringContextUtil beanUtil;
 
-    private ModelDB db;
+    private ModelDB dbModel;
+    private byte[] lockModel=new byte[1];
 
-    public ModelDB getInstance(){
-        if(db==null) {
-            synchronized (lock) {
-                db = (ModelDB) beanUtil.getBean(dbName);
+    private ResourceDB dbResource;
+    private byte[] lockResource=new byte[1];
+
+    public ModelDB getInstanceModel(){
+        if(dbModel==null) {
+            synchronized (lockModel) {
+                dbModel = (ModelDB) beanUtil.getBean(dbModelName);
             }
         }
-        return db;
+        return dbModel;
+    }
+
+    public ResourceDB getInstanceResource(){
+        if(dbResource==null) {
+            synchronized (lockResource) {
+                dbResource = (ResourceDB) beanUtil.getBean(dbResourceName);
+            }
+        }
+        return dbResource;
     }
 }

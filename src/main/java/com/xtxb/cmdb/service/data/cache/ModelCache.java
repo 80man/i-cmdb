@@ -14,10 +14,7 @@ import java.util.List;
  * <p>
  *     资源类型缓存
  */
-public interface ModelCache {
-
-
-    public  void initCache();
+public interface ModelCache  extends Initializer{
 
     /***********************资源类型相关API*******************************/
     /**

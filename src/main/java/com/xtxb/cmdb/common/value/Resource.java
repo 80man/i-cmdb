@@ -17,13 +17,11 @@ public class Resource {
     /*资源的唯一标识，由用户制定，长度不应超过32个字符*/
     private String sid;
     /*资源所属的模型类型*/
-    private String mClassName;
+    private String modelName;
     /*资源属性键值对*/
     private Map<String,Object> values;
 
-    public Resource(String sid,String mClassName){
-        this.sid=sid;
-        this.mClassName=mClassName;
+    public Resource(){
         values=new HashMap<>();
     }
 
@@ -43,12 +41,12 @@ public class Resource {
         this.sid = sid;
     }
 
-    public String getmClassName() {
-        return mClassName;
+    public String getModelName() {
+        return modelName;
     }
 
-    public void setmClassName(String mClassName) {
-        this.mClassName = mClassName;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public Map<String, Object> getValues() {
@@ -64,7 +62,7 @@ public class Resource {
             this.values.putAll(values);
     }
 
-    public void setValue(String key,String value){
+    public void setValue(String key,Object value){
         if(key!=null)
             values.put(key,value);
     }

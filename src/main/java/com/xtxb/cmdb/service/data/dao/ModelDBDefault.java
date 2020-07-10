@@ -21,7 +21,7 @@ import java.util.List;
  * <p>
  * 负责从数据库进行数据持久化
  */
-@Component("defaultDB")
+@Component("defaultModelDB")
 public class ModelDBDefault implements ModelDB {
 
     /*资源类型相关SQL*/
@@ -112,7 +112,7 @@ public class ModelDBDefault implements ModelDB {
      */
     @Override
     public List<Property> getProperties(String modelName) {
-        return template.query(SQL_GET_PROPERTY,propertyRowMapper);
+        return template.query(SQL_GET_PROPERTY,new String[]{modelName},propertyRowMapper);
     }
 
     /**

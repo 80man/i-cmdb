@@ -1,6 +1,8 @@
 package com.xtxb.cmdb.service.data;
 
+import com.xtxb.cmdb.common.value.Resource;
 import com.xtxb.cmdb.service.data.cache.ModelCache;
+import com.xtxb.cmdb.service.data.cache.ResourceCache;
 import com.xtxb.cmdb.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,19 +19,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class CacheFactory {
     @Value("${cmdb.cacha.model.name}")
-    private String cacheName;
-    private byte[] lock=new byte[1];
+    private String cacheModelName;
+
+    @Value("${cmdb.cacha.resource.name}")
+    private String cacheResourceName;
 
     @Autowired
     private SpringContextUtil beanUtil;
 
-    private ModelCache cache;
+    private ModelCache modelCache;
 
-    public ModelCache getInstance(){
-        if(cache==null) {
-            cache = (ModelCache) beanUtil.getBean(cacheName);
-            cache.initCache();
+    private ResourceCache resCache;
+
+    public ModelCache getModelInstance(){
+        if(modelCache==null) {
+            modelCache = (ModelCache) beanUtil.getBean(cacheModelName);
+            modelCache.init();
         }
-        return cache;
+        return modelCache;
+    }
+
+    public ResourceCache getResourceInstance(){
+        if(resCache==null) {
+            resCache = (ResourceCache) beanUtil.getBean(cacheResourceName);
+            resCache.init();
+        }
+        return resCache;
     }
 }
