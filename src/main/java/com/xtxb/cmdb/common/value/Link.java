@@ -14,9 +14,15 @@ public class Link {
     /*源端ID*/
     private long sid;
     /*目的端ID*/
-    private long did;
+    private long tid;
     /*说明信息*/
     private String note;
+
+    public Link(long sid, long tid, String note) {
+        this.sid = sid;
+        this.tid = tid;
+        this.note = note;
+    }
 
     public String getType() {
         return type;
@@ -34,12 +40,12 @@ public class Link {
         this.sid = sid;
     }
 
-    public long getDid() {
-        return did;
+    public long getTid() {
+        return tid;
     }
 
-    public void setDid(long did) {
-        this.did = did;
+    public void setTid(long tid) {
+        this.tid = tid;
     }
 
     public String getNote() {
@@ -48,5 +54,10 @@ public class Link {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Override
+    public String toString(){
+        return "sid:"+sid+"-tid:"+tid;
     }
 }

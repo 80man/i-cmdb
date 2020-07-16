@@ -1,5 +1,6 @@
 package com.xtxb.cmdb.service.data;
 
+import com.xtxb.cmdb.service.data.dao.LinkDB;
 import com.xtxb.cmdb.service.data.dao.ModelDB;
 import com.xtxb.cmdb.service.data.dao.ResourceDB;
 import com.xtxb.cmdb.util.SpringContextUtil;
@@ -23,6 +24,9 @@ public class DBFactory {
     @Value("${cmdb.db.resource.name}")
     private String dbResourceName;
 
+    @Value("${cmdb.db.link.name}")
+    private String dbLinkName;
+
 
     @Autowired
     private SpringContextUtil beanUtil;
@@ -32,6 +36,9 @@ public class DBFactory {
 
     private ResourceDB dbResource;
     private byte[] lockResource=new byte[1];
+
+    private LinkDB dbLink;
+    private byte[] lockLink=new byte[1];
 
     public ModelDB getInstanceModel(){
         if(dbModel==null) {
@@ -49,5 +56,14 @@ public class DBFactory {
             }
         }
         return dbResource;
+    }
+
+    public LinkDB getInstanceLink(){
+        if(dbLink==null) {
+            synchronized (lockLink) {
+                dbLink = (LinkDB) beanUtil.getBean(dbLinkName);
+            }
+        }
+        return dbLink;
     }
 }
