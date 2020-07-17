@@ -20,7 +20,7 @@ import java.util.Map;
  *
  */
 @Lazy
-@Component("defaultModelCache")
+@Component("defaultResCache")
 public class ResourceCacheDefault implements ResourceCache{
     private Map<Long,Resource> oidMap;
     private Map<String,Resource> sidMap;

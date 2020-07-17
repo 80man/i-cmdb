@@ -20,7 +20,7 @@ public class RelationShipRowMapper implements RowMapper<RelationShip> {
     @Override
     public RelationShip mapRow(ResultSet resultSet, int i) throws SQLException {
         return new RelationShip(resultSet.getString("ENNAME"),
-                resultSet.getString("CNNAM"),
+                resultSet.getString("CNNAME"),
                 resultSet.getString("SOURCEMODEL"),
                 resultSet.getString("TARGETMODEL"));
     }
