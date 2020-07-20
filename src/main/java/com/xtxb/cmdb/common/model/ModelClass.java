@@ -50,4 +50,9 @@ public class ModelClass {
         this.parent = parent;
     }
 
+    @Override
+    public Object clone(){
+        return new ModelClass(getName(),getDescr(),getParent());
+    }
+
 }
