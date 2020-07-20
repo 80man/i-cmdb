@@ -89,4 +89,18 @@ public class Property {
     public void setDescr(String descr) {
         this.descr = descr;
     }
+
+    @Override
+    public  Object clone(){
+        Property pro=new Property();
+        pro.setMatchRule(pro.getMatchRule());
+        pro.setRule(pro.getRule());
+        pro.setDefValue(pro.getDefValue());
+        pro.setType(pro.getType());
+        pro.setGroup(pro.getGroup());
+        pro.setDescr(pro.getDescr());
+        pro.setName(pro.getName());
+        pro.setModelName(pro.getModelName());
+        return pro;
+    }
 }
