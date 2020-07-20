@@ -42,6 +42,14 @@ public class LoggerUtil {
         log(Type.ERROR,msg,e);
     }
 
+    public void warn(String msg){
+        log(Type.ERROR,msg);
+    }
+
+    public void warn(String msg,Throwable e){
+        log(Type.ERROR,msg,e);
+    }
+
 
     private void log(Type type,String msg){
         if(log==null){
@@ -53,7 +61,8 @@ public class LoggerUtil {
             log.debug(msg);
         }else if(type==Type.ERROR){
             log.error(msg);
-        }
+        }else if(type==Type.WARN)
+            log.warn(msg);
     }
 
     private void log(Type type,String msg,Throwable e){
@@ -66,10 +75,11 @@ public class LoggerUtil {
             log.debug(msg,e);
         }else if(type==Type.ERROR){
             log.error(msg,e);
-        }
+        }else if(type==Type.WARN)
+            log.warn(msg,e);
     }
 
     enum Type{
-        INFO,DEBUG,ERROR;
+        INFO,DEBUG,ERROR,WARN;
     }
 }
