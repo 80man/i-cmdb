@@ -6,6 +6,7 @@ import com.xtxb.cmdb.common.model.RelationShip;
 import com.xtxb.cmdb.service.ModelService;
 import com.xtxb.cmdb.service.data.CacheFactory;
 import com.xtxb.cmdb.service.data.DBFactory;
+import com.xtxb.cmdb.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,9 @@ public class ModelServiceDefaultImpl implements ModelService {
 
     @Autowired
     private DBFactory dbFactory;
+
+    @Autowired
+    private LoggerUtil log;
     /**
      * 根据资源类型的名称（英文名称），查询类型定义信息
      *
@@ -69,6 +73,10 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateModel(ModelClass modelClass) throws Exception {
+        if(modelClass==null) {
+            log.warn("不能更新  NULL "+"对象");
+            return false;
+        }
         return dbFactory.getInstanceModel().updateModel(modelClass)
                 && cacheFactory.getModelInstance().updateModel(modelClass);
     }
