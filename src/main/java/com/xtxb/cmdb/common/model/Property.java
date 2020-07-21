@@ -93,14 +93,14 @@ public class Property {
     @Override
     public  Object clone(){
         Property pro=new Property();
-        pro.setMatchRule(pro.getMatchRule());
-        pro.setRule(pro.getRule());
-        pro.setDefValue(pro.getDefValue());
-        pro.setType(pro.getType());
-        pro.setGroup(pro.getGroup());
-        pro.setDescr(pro.getDescr());
-        pro.setName(pro.getName());
-        pro.setModelName(pro.getModelName());
+        pro.setMatchRule(getMatchRule());
+        pro.setRule(getRule());
+        pro.setDefValue(getDefValue());
+        pro.setType(getType());
+        pro.setGroup(getGroup());
+        pro.setDescr(getDescr());
+        pro.setName(getName());
+        pro.setModelName(getModelName());
         return pro;
     }
 }
