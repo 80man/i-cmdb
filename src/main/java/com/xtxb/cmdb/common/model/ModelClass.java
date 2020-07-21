@@ -17,13 +17,10 @@ public class ModelClass {
     private String name;
     /*类型的中文名称*/
     private String descr;
-    /*关联的上级类型，副类型*/
-    private String parent;
 
-    public ModelClass(String name, String descr, String parent) {
+    public ModelClass(String name, String descr) {
         this.name = name;
         this.descr = descr;
-        this.parent = parent;
     }
 
     public String getName() {
@@ -42,17 +39,9 @@ public class ModelClass {
         this.descr = descr;
     }
 
-    public String getParent() {
-        return parent;
-    }
-
-    public void setParent(String parent) {
-        this.parent = parent;
-    }
-
     @Override
     public Object clone(){
-        return new ModelClass(getName(),getDescr(),getParent());
+        return new ModelClass(getName(),getDescr());
     }
 
 }
