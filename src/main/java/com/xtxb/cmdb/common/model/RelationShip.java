@@ -57,4 +57,9 @@ public class RelationShip {
     public void setTargetModel(String targetModel) {
         this.targetModel = targetModel;
     }
+
+    @Override
+    public Object clone(){
+        return new RelationShip(getName(),getDescr(),getSourceModel(),getTargetModel());
+    }
 }
