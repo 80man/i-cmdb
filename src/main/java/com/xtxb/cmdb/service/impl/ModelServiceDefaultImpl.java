@@ -248,7 +248,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean addRelationShip(RelationShip relationShip) throws Exception {
-        return cacheFactory.getModelInstance().addRelationShip(relationShip);
+        return cacheFactory.getModelInstance().addRelationShip(relationShip)
+                && dbFactory.getInstanceModel().addRelationShip(relationShip);
     }
 
     /**
@@ -260,6 +261,7 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean deleteRelationShip(String name) throws Exception {
-        return cacheFactory.getModelInstance().deleteRelationShip(name);
+        return cacheFactory.getModelInstance().deleteRelationShip(name) &&
+                dbFactory.getInstanceModel().deleteRelationShip(name);
     }
 }

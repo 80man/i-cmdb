@@ -20,7 +20,6 @@ public class ModelRowMapper implements RowMapper<ModelClass> {
     @Override
     public ModelClass mapRow(ResultSet resultSet, int i) throws SQLException {
         return new ModelClass(resultSet.getString("ENNAME"),
-                resultSet.getString("CNNAME"),
-                resultSet.getString("PNAME"));
+                resultSet.getString("CNNAME"));
     }
 }

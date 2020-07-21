@@ -48,13 +48,8 @@ public class ModelCacheDefault implements ModelCache {
         //资源属性缓存
         for (Iterator<String> iterator = enNameMap.keySet().iterator(); iterator.hasNext(); ) {
             String modelName =  iterator.next();
-            List<String> list=new ArrayList();
-            findParent(modelName,list);
-            List<Property> properties=new ArrayList<>();
-            for(String mc:list)
-                properties.addAll(dbFactory.getInstanceModel().getProperties(mc));
             Map temp=new HashMap();
-            for(Property property: properties){
+            for(Property property: dbFactory.getInstanceModel().getProperties(modelName)){
                 temp.put(property.getName(),property);
             }
             propertiesMap.put(modelName,temp);
@@ -66,16 +61,6 @@ public class ModelCacheDefault implements ModelCache {
             relshipHashMap.put(rs.getName(),rs);
         }
         isInitialized=true;
-    }
-
-    private void findParent(String mname,List<String> list){
-        if(mname==null || mname.equals(""))
-            return ;
-        ModelClass mc=enNameMap.get(mname);
-        if(mc!=null) {
-            list.add(mname);
-            findParent(mc.getParent(),list);
-        }
     }
 
     /**
@@ -200,6 +185,7 @@ public class ModelCacheDefault implements ModelCache {
                 updateSuc=false;
                 break;
             }
+            propertiesMap.get(property.getModelName()).put(property.getName(),property);
             oldProperties.add(propertiesMap.get(property.getModelName()).put(property.getName(),property));
         }
         if(!updateSuc){
@@ -329,7 +315,7 @@ public class ModelCacheDefault implements ModelCache {
      */
     @Override
     public boolean deleteRelationShip(String name) throws Exception {
-        if(!relshipHashMap.containsKey(name)) {
+        if(relshipHashMap.containsKey(name)) {
             relshipHashMap.remove(name);
             return true;
         }else

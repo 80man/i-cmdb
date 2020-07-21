@@ -2,6 +2,7 @@ package com.xtxb.cmdb.service.data.dao;
 
 import com.xtxb.cmdb.common.model.ModelClass;
 import com.xtxb.cmdb.common.model.Property;
+import com.xtxb.cmdb.common.model.PropertyType;
 import com.xtxb.cmdb.common.model.RelationShip;
 import com.xtxb.cmdb.service.data.dao.mapper.ModelRowMapper;
 import com.xtxb.cmdb.service.data.dao.mapper.PropertyRowMapper;
@@ -10,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 作者: xtxb
@@ -27,14 +27,20 @@ public class ModelDBDefault implements ModelDB {
     /*资源类型相关SQL*/
     private static final String SQL_GET_MODEL="SELECT * FROM M_META";
     private static final String SQL_UPDATE_MODEL="UPDATE M_META SET CNNAME=? WHERE ENNAME=?";
-    private static final String SQL_ADD_MODEL="INSERT INTO M_META (ENNAME, CNNAME,PNAME) " +
-            "VALUES (?,?,?)";
+    private static final String SQL_ADD_MODEL="INSERT INTO M_META (ENNAME, CNNAME) " +
+            "VALUES (?,?)";
+    private static final String SQL_CREATE_MODEL_TABLE="CREATE TABLE ${tableName} (\n" +
+            "P_OID numeric(20)  not null primary key,\n" +
+            "P_SID varchar(32) \n" +
+            ")" ;
+    private static final String SQL_CREATE_MODEL_INDEX="CREATE INDEX ${tableName}_IND_P_SID ON ${tableName} (P_SID)";
+    private static final String SQL_DROP_MODEL_TABLE="DROP TABLE ${tableName}";
     private static final String SQL_DELETE_MODEL="DELETE FROM M_META WHERE ENNAME=?";
 
     /*资源属性相关SQL*/
     private static final String SQL_GET_PROPERTY="SELECT * FROM P_META WHERE PNAME=?";
     private static final String SQL_UPDATE_PROPERTY="UPDATE P_META SET  " +
-            "CNNAME=?,PNAME=? ,PGROUP=?, DEFVALUE=?, MATCHRULE=?, MATCHRULEVALUE=? WHERE ENNAME=?";
+            "CNNAME=?,PGROUP=?, DEFVALUE=?, MATCHRULE=?, MATCHRULEVALUE=? WHERE ENNAME=?";
     private static final String SQL_ADD_PROPERTY="INSERT INTO P_META (ENNAME, CNNAME,PNAME,PGROUP,PTYPE, DEFVALUE, MATCHRULE, MATCHRULEVALUE) "+
             "VALUES (?,?,?,?,?,?,?,?)";
     private static final String SQL_DELETE_PROPERTY="DELETE FROM P_META WHERE ENNAME=?";
@@ -90,7 +96,14 @@ public class ModelDBDefault implements ModelDB {
      */
     @Override
     public boolean addModel(ModelClass modelClass) throws Exception {
-        return template.update(SQL_ADD_MODEL,modelClass.getName(),modelClass.getDescr(),modelClass.getParent())>0;
+        if(template.update(SQL_ADD_MODEL,modelClass.getName(),modelClass.getDescr())>0){
+            String tableName=modelClass.getName().toUpperCase();
+            tableName=tableName.startsWith("C_")?tableName:("C_"+tableName);
+            template.execute(SQL_CREATE_MODEL_TABLE.replace("${tableName}",tableName)) ;
+            template.execute(SQL_CREATE_MODEL_INDEX.replace("${tableName}",tableName)) ;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -101,7 +114,13 @@ public class ModelDBDefault implements ModelDB {
      */
     @Override
     public boolean deleteModel(String name) throws Exception {
-        return  template.update(SQL_DELETE_MODEL,name)>0;
+        if( template.update(SQL_DELETE_MODEL,name)>0) {
+            name=name.toUpperCase().startsWith("C_")?name.toUpperCase():("C_"+name.toUpperCase());
+            template.execute(SQL_DROP_MODEL_TABLE.replace("${tableName}",name));
+            return true;
+        }
+
+        return  false;
     }
 
     /**
@@ -127,7 +146,7 @@ public class ModelDBDefault implements ModelDB {
         List<Object[]> rows=new ArrayList<>(propertys.size());
         for(Property pro: propertys){
             rows.add(new Object[]{
-                    pro.getDescr(),pro.getModelName(),pro.getGroup(),pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule()
+                    pro.getDescr(),pro.getGroup(),pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule(),pro.getName()
             });
         }
         return template.batchUpdate(SQL_UPDATE_PROPERTY,rows)!=null;
@@ -143,13 +162,38 @@ public class ModelDBDefault implements ModelDB {
     @Override
     public boolean addProperty(List<Property> propertys) throws Exception {
         List<Object[]> rows=new ArrayList<>(propertys.size());
+        List<String> sqls=new ArrayList();
+        Map<String,List<String>> subMap=new HashMap<>();
         for(Property pro: propertys){
+
             rows.add(new Object[]{
                     pro.getName(),pro.getDescr(),pro.getModelName(),pro.getGroup(),pro.getType().ordinal()+1,
                     pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule()
             });
+
+            String tn= pro.getModelName().toUpperCase();
+            tn=tn.startsWith("C_")?tn:"C_"+tn;
+            String cn=pro.getName().toUpperCase();
+            cn=cn.startsWith("C_")?cn:"C_"+cn;
+            String type="VARCHAR(200)";
+            if(pro.getType()== PropertyType.DATETIE
+                        || pro.getType()== PropertyType.DATE
+                        || pro.getType()== PropertyType.TIME
+                        || pro.getType()== PropertyType.LONG)
+                    type="NUMERIC(20)";
+            else if(pro.getType()== PropertyType.FLOAT)
+                    type="NUMERIC(20,2)";
+            else if(pro.getType()== PropertyType.BOOLEAN)
+                    type="NUMERIC(1)";
+            sqls.add("ALTER TABLE "+tn+" ADD COLUMN  "+cn+" "+type);
         }
-        return template.batchUpdate(SQL_ADD_PROPERTY,rows)!=null;
+        if(template.batchUpdate(SQL_ADD_PROPERTY,rows)!=null){
+            for(String sql : sqls){
+                template.execute(sql);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -162,12 +206,27 @@ public class ModelDBDefault implements ModelDB {
     @Override
     public boolean deleteProperties(List<Property> propertys) throws Exception {
         List<Object[]> rows=new ArrayList<>(propertys.size());
+        List<String> sqls=new ArrayList();
+        Map<String,List<String>> subMap=new HashMap<>();
+
         for(Property pro: propertys){
             rows.add(new Object[]{
                     pro.getName(),
             });
+
+            String tn = pro.getModelName().toUpperCase();
+            tn = tn.startsWith("C_") ? tn : "C_" + tn;
+            String cn = pro.getName().toUpperCase();
+            cn = cn.startsWith("C_") ? cn : "C_" + cn;
+            sqls.add("ALTER TABLE "+tn+" DROP COLUMN "+cn);
         }
-        return template.batchUpdate(SQL_DELETE_PROPERTY,rows)!=null;
+        if(template.batchUpdate(SQL_DELETE_PROPERTY,rows)!=null){
+            for(String sql : sqls){
+                template.execute(sql);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -201,8 +260,22 @@ public class ModelDBDefault implements ModelDB {
      */
     @Override
     public boolean addRelationShip(RelationShip relationShip) throws Exception {
-        return template.update(SQL_ADD_RELATION,
-                relationShip.getDescr(),relationShip.getName(),relationShip.getSourceModel(),relationShip.getTargetModel())>0;
+        if(template.update(SQL_ADD_RELATION,
+                relationShip.getName(), relationShip.getDescr(),relationShip.getSourceModel(),relationShip.getTargetModel())>0){
+            String tn=relationShip.getName().toUpperCase();
+            if(!tn.startsWith("R_"))
+                tn="R_"+tn;
+            String sql1="CREATE TABLE "+tn+" (\n" +
+                    "R_SID numeric(20),\n" +
+                    "R_TID numeric(20),\n" +
+                    "R_NOTE varchar(100)\n" +
+                    ")";
+            String sql2="CREATE INDEX "+tn+"_IND ON "+tn+" (R_SID,R_TID)";
+            template.execute(sql1);
+            template.execute(sql2);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -214,6 +287,13 @@ public class ModelDBDefault implements ModelDB {
      */
     @Override
     public boolean deleteRelationShip(String name) throws Exception {
-        return template.update(SQL_DELETE_RELATION,name)>0;
+        if( template.update(SQL_DELETE_RELATION,name)>0){
+            String tn=name.toUpperCase();
+            if(!tn.startsWith("R_"))
+                tn="R_"+tn;
+            template.execute("DROP TABLE "+tn);
+            return true;
+        }
+        return false;
     }
 }
