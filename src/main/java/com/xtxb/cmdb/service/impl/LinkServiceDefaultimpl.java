@@ -83,7 +83,7 @@ public class LinkServiceDefaultimpl implements LinkService {
      */
     @Override
     public boolean deleteLink(Link... link) throws Exception {
-        return deleteLink(link);
+        return deleteLink(Arrays.asList(link));
     }
 
     /**
