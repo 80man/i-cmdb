@@ -1,6 +1,7 @@
 package com.xtxb.cmdb.common.value;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -65,5 +66,18 @@ public class Resource {
     public void setValue(String key,Object value){
         if(key!=null)
             values.put(key,value);
+    }
+
+    @Override
+    public Object clone(){
+        Resource res=new Resource();
+        res.setOid(getOid());
+        res.setSid(getSid());
+        res.setModelName(getModelName());
+        for (Iterator<String> iterator = values.keySet().iterator(); iterator.hasNext(); ) {
+            String property =  iterator.next();
+            res.setValue(property,values.get(property));
+        }
+        return res;
     }
 }

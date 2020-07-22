@@ -6,6 +6,7 @@ import com.xtxb.cmdb.service.data.dao.mapper.ResourceRowMapper;
 import com.xtxb.cmdb.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ import java.util.*;
  * <p>
  * 负责持久化资源实例
  */
+@Component("defaultResourceDB")
 public class ResourceDBDefault implements ResourceDB{
 
     @Autowired
@@ -25,7 +27,7 @@ public class ResourceDBDefault implements ResourceDB{
     @Autowired
     private SpringContextUtil beanUtil;
 
-    private final static String GET_SQL="SELECT * FROM ${tableName} ${where} OFFSET ${pageIndex} FETCH FIRST ${pageLen} ROWS ONLY";
+    private final static String GET_SQL="SELECT * FROM ${tableName} ${where} ORDER BY P_OID OFFSET ${pageIndex} ROWS FETCH FIRST ${pageLen} ROWS ONLY";
 
     /**
      * 分页获取资源对象
@@ -53,7 +55,7 @@ public class ResourceDBDefault implements ResourceDB{
      */
     @Override
     public List<Resource> queryResources(String modelName,int pageIndex, int pageLen, String user, QueryIterm... iterm) throws Exception {
-        pageIndex=(pageIndex-1)*pageLen+1;
+        pageIndex=(pageIndex-1)*pageLen;
         StringBuilder whereStr=new StringBuilder("");
         if(iterm!=null){
             whereStr.append("WHERE ");
@@ -69,7 +71,8 @@ public class ResourceDBDefault implements ResourceDB{
                     else
                         whereStr.append(" OR ");
                 }else{
-                    whereStr.append(" "+((KeyPair)queryIterm).getProperty()+"='"+((KeyPair)queryIterm).getValue()+"' ");
+                    String column=((KeyPair)queryIterm).getProperty().toUpperCase();
+                    whereStr.append(" "+(column.startsWith("P_")?column:("P_"+column))+"='"+((KeyPair)queryIterm).getValue()+"' ");
                 }
             }
         }
@@ -163,12 +166,16 @@ public class ResourceDBDefault implements ResourceDB{
         StringBuilder sbval=new StringBuilder("");
         for (Iterator<String> iterator = res.getValues().keySet().iterator(); iterator.hasNext(); ) {
             String property =  iterator.next();
-            sbcol.append(res.getValue(getColumnName(property))+",");
+            sbcol.append(getColumnName(property)+",");
             sbval.append(getSqlValue(res.getValue(property))+", ");
         }
+        sbcol.append("P_OID,");
+        sbval.append(res.getOid()+",");
+        sbcol.append("P_SID");
+        sbval.append("'"+res.getSid()+"'");
         return "INSERT INTO "+ getTableName(res.getModelName())+
-                "("+sbcol.substring(0,sbcol.length()-1)+") VALUES("+
-                sbval.substring(0,sbval.length()-1)+")";
+                "("+sbcol.toString()+") VALUES("+
+                sbval.toString()+")";
 
     }
 

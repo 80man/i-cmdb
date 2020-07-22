@@ -174,7 +174,7 @@ public class ModelServiceTestCase extends CmdbApplicationTest {
         try {
             Assert.assertTrue(model.addRelationShip(rs));
             Assert.assertTrue(model.getRelationShip("A")!=null);
-            Assert.assertTrue(model.deleteRelationShip("A"));
+            model.deleteRelationShip("A");
         } catch (Exception e) {
             e.printStackTrace();
         }
