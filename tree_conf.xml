@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<trees> 
+  <tree name="t1" title="资源类型"> 
+    <node name="NetDevice" title="网络设备" isLabel="true" url=""> 
+      <node name="C_Router" title="路由器" isLabel="false" url=""/>  
+      <node name="C_Firewall" title="防火墙" isLabel="false" url=""/>  
+      <node name="switch" title="交换机" isLabel="true" url=""> 
+        <node name="C_Switch" title="三层交换机" isLabel="false" url=""/>  
+        <node name="C_Hub" title="二层交换机" isLabel="false" url=""/>  
+        <node name="" title="" isLabel="false" url=""/> 
+      </node> 
+    </node>  
+    <node name="C_Host" title="服务器" isLabel="false" url=""/> 
+  </tree>  
+  <tree name="t2" title="应用管理"> 
+    <node name="C_Process" title="进程" isLabel="false" url=""/>  
+    <node name="C_Process" title="进程" isLabel="false" url=""/>  
+    <node name="C_Process" title="进程" isLabel="false" url=""/>  
+    <node name="C_Process" title="进程" isLabel="false" url=""/> 
+  </tree> 
+</trees>
