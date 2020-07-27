@@ -15,4 +15,38 @@ public class ViewIterm {
     private String title;
     /*关联色属性名称*/
     private String propertyName;
+    /*属性类型*/
+    private int ptopertyType;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public int getPtopertyType() {
+        return ptopertyType;
+    }
+
+    public void setPtopertyType(int ptopertyType) {
+        this.ptopertyType = ptopertyType;
+    }
 }

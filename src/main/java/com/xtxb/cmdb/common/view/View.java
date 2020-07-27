@@ -12,7 +12,7 @@ public class View {
     /*视图的名称*/
     private String name;
     /*视图所属的资源类型*/
-    private String cModelName;
+    private String modelName;
     /*视图类型*/
     private ViewType type;
     /**
@@ -39,12 +39,12 @@ public class View {
         this.type = type;
     }
 
-    public String getcModelName() {
-        return cModelName;
+    public String getModelName() {
+        return modelName;
     }
 
-    public void setcModelName(String cModelName) {
-        this.cModelName = cModelName;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public String getDemo() {

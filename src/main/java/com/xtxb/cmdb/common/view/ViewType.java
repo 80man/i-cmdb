@@ -12,7 +12,7 @@ public enum ViewType {
     /*列表呈现资源时显示的属性相关规则*/
     LIST,
     /*呈现资源详情时显示的属性相关规则*/
-    VIEW,
+    DETAIL,
     /*修改资源时呈现的属性规则*/
     MODIFY;
 }

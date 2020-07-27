@@ -5,6 +5,7 @@ import com.xtxb.cmdb.common.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ import static org.junit.Assert.assertTrue;
 
 @Transactional
 public class ModelServiceTestCase extends CmdbApplicationTest {
+
+    @Autowired
+    protected ModelService model;
 
     @Test
     public void testModelByDesc1(){

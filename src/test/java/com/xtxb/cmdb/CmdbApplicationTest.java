@@ -17,8 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
         locations = {"classpath:application.properties"})
 public abstract class CmdbApplicationTest {
 
-    @Autowired
-    protected ModelService model;
 
     @Before
     public void beforAll(){
