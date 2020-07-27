@@ -9,6 +9,7 @@ import com.xtxb.cmdb.service.ViewService;
 import com.xtxb.cmdb.util.LoggerUtil;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
@@ -52,6 +53,9 @@ public class ViewServiceDefaultImpl  implements ViewService {
         if(!file.exists()){
             try {
                 file.createNewFile();
+                Document doc=DocumentFactory.getInstance().createDocument("UTF-8");
+                doc.addElement("views");
+                writeDocument(doc,file);
             } catch (IOException e) {
                 log.error("",e);
             }
