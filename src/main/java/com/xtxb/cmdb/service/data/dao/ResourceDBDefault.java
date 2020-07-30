@@ -138,7 +138,7 @@ public class ResourceDBDefault implements ResourceDB{
         String[] sqls=new String[resources.size()];
         int index=0;
         for (Resource resource : resources) {
-            sqls[index++]="SELECT FROM "+getTableName(resource.getModelName()) +" WHERE P_OID="+resource.getOid();
+            sqls[index++]="DELETE FROM "+getTableName(resource.getModelName()) +" WHERE P_OID="+resource.getOid();
         }
 
         int[] re=template.batchUpdate(sqls);
@@ -153,11 +153,10 @@ public class ResourceDBDefault implements ResourceDB{
             String property =  iterator.next();
             if(property.equals("oid"))
                 continue;
-            sb.append(getColumnName(property)+"=");
-            sb.append(getSqlValue(res.getValue(property))+", ");
-            sb.append(", ");
+            sb.append(" "+getColumnName(property)+"=");
+            sb.append(getSqlValue(res.getValue(property))+",");
         }
-        return sb.substring(0,sb.length()-1)+" WHERE P_0ID="+res.getOid();
+        return sb.substring(0,sb.length()-1)+" WHERE P_OID="+res.getOid();
     }
 
 
