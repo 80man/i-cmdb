@@ -1,6 +1,5 @@
 package com.xtxb.cmdb.service.data;
 
-import com.xtxb.cmdb.common.value.Resource;
 import com.xtxb.cmdb.service.data.cache.ModelCache;
 import com.xtxb.cmdb.service.data.cache.ResourceCache;
 import com.xtxb.cmdb.util.SpringContextUtil;
@@ -23,6 +22,9 @@ public class CacheFactory {
 
     @Value("${cmdb.cacha.resource.name}")
     private String cacheResourceName;
+
+    @Value("${cmdb.cacha.security.name}")
+    private String cacheSecurityName;
 
     @Autowired
     private SpringContextUtil beanUtil;

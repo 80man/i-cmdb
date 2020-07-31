@@ -5,6 +5,7 @@ import com.xtxb.cmdb.common.value.Resource;
 import com.xtxb.cmdb.service.data.dao.mapper.ResourceRowMapper;
 import com.xtxb.cmdb.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.util.*;
  * <p>
  * 负责持久化资源实例
  */
+@Lazy
 @Component("defaultResourceDB")
 public class ResourceDBDefault implements ResourceDB{
 

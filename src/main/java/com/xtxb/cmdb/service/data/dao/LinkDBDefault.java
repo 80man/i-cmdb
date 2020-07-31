@@ -4,6 +4,7 @@ import com.xtxb.cmdb.common.value.Link;
 import com.xtxb.cmdb.service.data.dao.mapper.LinkRowMapper;
 import com.xtxb.cmdb.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * <p>
  * 默认的资源关系处理类
  */
+@Lazy
 @Component("defaultLinkDB")
 public class LinkDBDefault implements LinkDB {
 

@@ -8,6 +8,7 @@ import com.xtxb.cmdb.service.data.dao.mapper.ModelRowMapper;
 import com.xtxb.cmdb.service.data.dao.mapper.PropertyRowMapper;
 import com.xtxb.cmdb.service.data.dao.mapper.RelationShipRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ import java.util.*;
  * <p>
  * 负责从数据库进行数据持久化
  */
+@Lazy
 @Component("defaultModelDB")
 public class ModelDBDefault implements ModelDB {
 

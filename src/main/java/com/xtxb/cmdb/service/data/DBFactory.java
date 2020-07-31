@@ -27,6 +27,9 @@ public class DBFactory {
     @Value("${cmdb.db.link.name}")
     private String dbLinkName;
 
+    @Value("${cmdb.db.security.name}")
+    private String dbSecurityName;
+
 
     @Autowired
     private SpringContextUtil beanUtil;
