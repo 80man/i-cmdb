@@ -40,6 +40,7 @@ public class ResourceCacheDefault implements ResourceCache{
                     List<Resource> rlist = dbFactory.getInstanceResource().getResources(mc.getName(), page++, 1000, "root");
                     if (rlist != null && rlist.size()>0) {
                         for (Resource resource : rlist) {
+                            resource.setModelName(mc.getName());
                             oidMap.put(resource.getOid(), resource);
                             sidMap.put(resource.getSid(), resource);
                         }

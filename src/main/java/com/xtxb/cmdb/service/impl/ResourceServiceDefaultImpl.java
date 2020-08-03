@@ -4,6 +4,7 @@ import com.xtxb.cmdb.common.query.QueryIterm;
 import com.xtxb.cmdb.common.value.Resource;
 import com.xtxb.cmdb.service.data.CacheFactory;
 import com.xtxb.cmdb.service.data.DBFactory;
+import com.xtxb.cmdb.util.IDUtil;
 import com.xtxb.cmdb.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,9 @@ public class ResourceServiceDefaultImpl implements com.xtxb.cmdb.service.Resourc
 
     @Autowired
     private DBFactory dbFactory;
+
+    @Autowired
+    private IDUtil idUtil;
 
     /**
      * 根据oid查询资源
@@ -134,6 +138,9 @@ public class ResourceServiceDefaultImpl implements com.xtxb.cmdb.service.Resourc
      */
     @Override
     public boolean addResources(String user, List<Resource> resources) throws Exception {
+        for(Resource res:resources){
+            res.setOid(idUtil.next());
+        }
         return dbFactory.getInstanceResource().addResources(user,resources)
                 && cacheFactory.getResourceInstance().addResources(user,resources);
     }

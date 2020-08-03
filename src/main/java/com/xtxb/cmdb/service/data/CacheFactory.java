@@ -23,9 +23,6 @@ public class CacheFactory {
     @Value("${cmdb.cacha.resource.name}")
     private String cacheResourceName;
 
-    @Value("${cmdb.cacha.security.name}")
-    private String cacheSecurityName;
-
     @Autowired
     private SpringContextUtil beanUtil;
 
