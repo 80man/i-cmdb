@@ -38,6 +38,7 @@ public class ResourceRowMapper implements RowMapper<Resource> {
         Resource obj=new Resource();
         obj.setOid(resultSet.getLong("P_OID"));
         obj.setSid(resultSet.getString("P_SID"));
+        obj.setModelName(modelName);
         Object value=null;
         for (Property property : properties) {
             if(property.getName().equals("oid") || property.getName().equals("sd"))

@@ -74,7 +74,7 @@ public class ResourceDBDefault implements ResourceDB{
                         whereStr.append(" OR ");
                 }else{
                     String column=((KeyPair)queryIterm).getProperty().toUpperCase();
-                    whereStr.append(" "+(column.startsWith("P_")?column:("P_"+column))+"='"+((KeyPair)queryIterm).getValue()+"' ");
+                    whereStr.append(" "+(column.startsWith("P_")?column:("P_"+column))+" "+((KeyPair)queryIterm).getCompareType()+" '"+((KeyPair)queryIterm).getValue()+"' ");
                 }
             }
         }
@@ -158,7 +158,7 @@ public class ResourceDBDefault implements ResourceDB{
             sb.append(" "+getColumnName(property)+"=");
             sb.append(getSqlValue(res.getValue(property))+",");
         }
-        return sb.substring(0,sb.length()-1)+" WHERE P_OID="+res.getOid();
+        return sb.toString()+" P_SID='"+res.getSid()+"' WHERE P_OID="+res.getOid();
     }
 
 

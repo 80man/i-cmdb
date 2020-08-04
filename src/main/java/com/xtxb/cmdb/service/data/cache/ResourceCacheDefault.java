@@ -40,7 +40,6 @@ public class ResourceCacheDefault implements ResourceCache{
                     List<Resource> rlist = dbFactory.getInstanceResource().getResources(mc.getName(), page++, 1000, "root");
                     if (rlist != null && rlist.size()>0) {
                         for (Resource resource : rlist) {
-                            resource.setModelName(mc.getName());
                             oidMap.put(resource.getOid(), resource);
                             sidMap.put(resource.getSid(), resource);
                         }
@@ -88,9 +87,12 @@ public class ResourceCacheDefault implements ResourceCache{
      */
     @Override
     public boolean updateResources(String user, List<Resource> resources) throws Exception {
+        String sid=null;
         for (Resource resource : resources) {
-            oidMap.put(resource.getOid(), resource);
-            sidMap.put(resource.getSid(), resource);
+            sid=oidMap.get(resource.getOid()).getSid();
+            oidMap.get(resource.getOid()).setValues(resource.getValues());
+            sidMap.put(resource.getSid(),sidMap.remove(sid));
+            sidMap.get(resource.getSid()).setValues(resource.getValues());
         }
         return true;
     }

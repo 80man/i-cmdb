@@ -60,8 +60,8 @@ public class IDUtil {
             current_OID = 1;
             ceiling_OID = 100;
         }else{
-            current_OID=(long)map.get("MAX_OID");
-            ceiling_OID=current_OID+(long)map.get("STEP_LEN");
+            current_OID=Long.parseLong(map.get("MAX_OID")+"");
+            ceiling_OID=current_OID+Long.parseLong(map.get("STEP_LEN")+"");
             template.update("UPDATE ID_META SET MAX_OID="+ceiling_OID);
         }
     }
