@@ -15,5 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class APIConfig extends ResourceConfig {
     public APIConfig(){
         register(ResourceAPI.class);
+        register(LinkAPI.class);
+        register(ModelAPI.class);
     }
 }
