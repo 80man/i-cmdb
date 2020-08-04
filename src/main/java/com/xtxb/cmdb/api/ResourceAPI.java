@@ -51,7 +51,6 @@ public class ResourceAPI extends BaseAPI{
     @Path("/single/oid")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public String getResourceByOid(@QueryParam("oid") long oid,@QueryParam("user") String user){
         Map<String,Object> value=getReturnMap();
 
@@ -73,7 +72,6 @@ public class ResourceAPI extends BaseAPI{
     @Path("/single/sid")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public String getResourceBySid(@QueryParam("sid") String sid,@QueryParam("user") String user){
         Map<String,Object> value=getReturnMap();
 
@@ -97,7 +95,6 @@ public class ResourceAPI extends BaseAPI{
     @Path("/multi/type")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public Map<String,Object> queryByModelClass(@QueryParam("modelName") String modelName,@QueryParam("user") String user,
                                                 @QueryParam("pageIndex") int pageIndex,@QueryParam("pageLen") int pageLen){
         Map<String,Object> value=getReturnMap();
