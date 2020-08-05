@@ -97,6 +97,11 @@ public class LinkAPI extends BaseAPI{
         int i=0;
         for(Map<String,Object> map:links){
             array[i++]=getLink(map);
+            if(service.getLink(array[i++].getType(),array[i++].getSid(),array[i++].getTid())!=null){
+                value.put("code",ERROR);
+                value.put("message","存在重复的资源关系对象");
+                return value;
+            }
         }
         try {
             if(service.addLink(array)){
