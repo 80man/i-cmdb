@@ -49,8 +49,12 @@ public interface ViewService {
 
     /**
      * 删除视图
-     * @param view
+     * @param type
+     * @param demo
+     * @param scens
+     * @param name
+     * @param modelName
      * @return
      */
-    public boolean deleteView(View view);
+    public boolean deleteView(ViewType type,String demo, String  scens,String name,String modelName);
 }

@@ -274,26 +274,29 @@ public class ViewServiceDefaultImpl  implements ViewService {
      */
     @Override
     public boolean updateView(View view) {
-        return deleteView(view) && addView(view);
+        return deleteView(view.getType(),view.getDemo(),view.getScene(),view.getName(),view.getModelName()) && addView(view);
     }
 
     /**
      * 删除视图
-     *
-     * @param view
+     * @param type
+     * @param demo
+     * @param scens
+     * @param name
+     * @param modelName
      * @return
      */
     @Override
-    public boolean deleteView(View view) {
+    public boolean deleteView(ViewType type,String demo,String scens,String name,String modelName) {
         int index=-1;
-        List<View> list=viewMap.get(view.getModelName());
+        List<View> list=viewMap.get(modelName);
         if(list==null)
             return false;
         for (int i=0;i<list.size();i++) {
-            if(list.get(i).getName().equals(view.getName())
-                    && list.get(i).getScene().equals(view.getScene())
-                    && list.get(i).getDemo().equals(view.getDemo())
-                    && list.get(i).getType()==view.getType()){
+            if(list.get(i).getName().equals(name)
+                    && list.get(i).getScene().equals(scens)
+                    && list.get(i).getDemo().equals(demo)
+                    && list.get(i).getType()==type){
                 index=i;
                 break;
             }
@@ -303,16 +306,16 @@ public class ViewServiceDefaultImpl  implements ViewService {
             try {
                 SAXReader reader = new SAXReader();
                 Document doc = reader.read(file);
-                String type="List";
-                if(view.getType()==ViewType.DETAIL)
-                    type="Detail";
-                if(view.getType()==ViewType.MODIFY)
-                    type="Modify";
-                Node node=doc.selectSingleNode("/views/view[@name='"+view.getName()+"' " +
-                        "and @modelName='" +view.getModelName()+"' "+
-                        "and @demo='" +view.getDemo()+"' "+
-                        "and @scens='" +view.getScene()+"' "+
-                        "and @type='" +type+"'"+
+                String typeStr="List";
+                if(type==ViewType.DETAIL)
+                    typeStr="Detail";
+                if(type==ViewType.MODIFY)
+                    typeStr="Modify";
+                Node node=doc.selectSingleNode("/views/view[@name='"+name+"' " +
+                        "and @modelName='" +modelName+"' "+
+                        "and @demo='" +demo+"' "+
+                        "and @scens='" +scens+"' "+
+                        "and @type='" +typeStr+"'"+
                         "]");
                 if(node!=null){
                     doc.getRootElement().remove(node);
