@@ -42,7 +42,7 @@ public class ModelDBDefault implements ModelDB {
     /*资源属性相关SQL*/
     private static final String SQL_GET_PROPERTY="SELECT * FROM P_META WHERE PNAME=?";
     private static final String SQL_UPDATE_PROPERTY="UPDATE P_META SET  " +
-            "CNNAME=?,PGROUP=?, DEFVALUE=?, MATCHRULE=?, MATCHRULEVALUE=? WHERE ENNAME=?";
+            "CNNAME=?,PGROUP=?, DEFVALUE=?, MATCHRULE=?, MATCHRULEVALUE=? WHERE ENNAME=? and PNAME=?";
     private static final String SQL_ADD_PROPERTY="INSERT INTO P_META (ENNAME, CNNAME,PNAME,PGROUP,PTYPE, DEFVALUE, MATCHRULE, MATCHRULEVALUE) "+
             "VALUES (?,?,?,?,?,?,?,?)";
     private static final String SQL_DELETE_PROPERTY="DELETE FROM P_META WHERE ENNAME=?";
@@ -148,7 +148,7 @@ public class ModelDBDefault implements ModelDB {
         List<Object[]> rows=new ArrayList<>(propertys.size());
         for(Property pro: propertys){
             rows.add(new Object[]{
-                    pro.getDescr(),pro.getGroup(),pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule(),pro.getName()
+                    pro.getDescr(),pro.getGroup(),pro.getDefValue(),pro.getRule()!=null?(pro.getRule().ordinal()+1):0,pro.getMatchRule(),pro.getName(),pro.getModelName()
             });
         }
         return template.batchUpdate(SQL_UPDATE_PROPERTY,rows)!=null;
@@ -176,7 +176,7 @@ public class ModelDBDefault implements ModelDB {
             String tn= pro.getModelName().toUpperCase();
             tn=tn.startsWith("C_")?tn:"C_"+tn;
             String cn=pro.getName().toUpperCase();
-            cn=cn.startsWith("C_")?cn:"C_"+cn;
+            cn=cn.startsWith("P_")?cn:"P_"+cn;
             String type="VARCHAR(200)";
             if(pro.getType()== PropertyType.DATETIE
                         || pro.getType()== PropertyType.DATE
@@ -219,7 +219,7 @@ public class ModelDBDefault implements ModelDB {
             String tn = pro.getModelName().toUpperCase();
             tn = tn.startsWith("C_") ? tn : "C_" + tn;
             String cn = pro.getName().toUpperCase();
-            cn = cn.startsWith("C_") ? cn : "C_" + cn;
+            cn = cn.startsWith("P_") ? cn : "P_" + cn;
             sqls.add("ALTER TABLE "+tn+" DROP COLUMN "+cn);
         }
         if(template.batchUpdate(SQL_DELETE_PROPERTY,rows)!=null){

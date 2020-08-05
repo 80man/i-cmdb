@@ -236,7 +236,8 @@ public class ModelServiceDefaultImpl implements ModelService {
      */
     @Override
     public boolean updateRelationShip(RelationShip relationShip) throws Exception {
-        return cacheFactory.getModelInstance().updateRelationShip(relationShip);
+        return cacheFactory.getModelInstance().updateRelationShip(relationShip)
+                && dbFactory.getInstanceModel().updateRelationShip(relationShip);
     }
 
     /**

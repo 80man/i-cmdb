@@ -1,12 +1,11 @@
 package com.xtxb.cmdb.api;
 
-import com.xtxb.cmdb.common.model.ModelClass;
-import com.xtxb.cmdb.common.model.Property;
-import com.xtxb.cmdb.common.model.RelationShip;
+import com.xtxb.cmdb.common.model.*;
 import com.xtxb.cmdb.service.ModelService;
 import com.xtxb.cmdb.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -195,6 +194,414 @@ public class ModelAPI  extends BaseAPI{
 
         return returnMap;
     }
+
+    /**
+     * 添加资源类型
+     * @param name
+     * @param descr
+     * @param user
+     * @return
+     */
+    @Path("/model/add")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String,Object> addModel(@QueryParam("name") String name,@QueryParam("descr") String descr,@QueryParam("user") String user){
+        Map<String,Object> returnMap=getReturnMap();
+        if(name==null || descr==null){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","name或descr参数为NULL");
+            return returnMap;
+        }
+
+        ModelClass model=new ModelClass(name,descr);
+        try {
+            if(service.getModelByName(name)!=null || service.getModelByDescr(descr)!=null){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","添加的资源类型重复");
+                return returnMap;
+            }
+            if (!service.addModel(model)) {
+                returnMap.put("code",ERROR);
+                returnMap.put("message","添加资源类型失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","添加资源类型失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+    /**
+     * 添加资源属性
+     * @param user
+     * @param properties
+     * @return
+     */
+    @Path("/property/add")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> addProperty(@QueryParam("user") String user, @RequestBody List<Map<String,Object>> properties){
+        Map<String,Object> returnMap=getReturnMap();
+        if(properties==null || properties.isEmpty()){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","待添加的资源属性为NULL");
+            return returnMap;
+        }
+
+        Property[] array=new Property[properties.size()];
+        int i=0;
+        for(Map<String,Object> map:properties){
+            array[i]=getProperty(map);
+            if(service.getProperty(array[i].getModelName(),array[i].getName())!=null){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","待添加的资源属性与现有属性重复");
+                return returnMap;
+            }
+            i++;
+        }
+
+        try {
+            if(!service.addProperty(array)){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","添加资源属性失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","添加资源属性失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+    /**
+     * 添加资源关系
+     * @param user
+     * @param ship
+     * @return
+     */
+    @Path("/relationship/add")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> addRelationShip(@QueryParam("user") String user, @RequestBody Map<String,Object> ship){
+        Map<String,Object> returnMap=getReturnMap();
+        if(ship==null || ship.isEmpty()){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","待添加的资源资源关系类型为NULL");
+            return returnMap;
+        }
+
+        String name=(String)ship.get("name");
+        String descr=(String)ship.get("descr");
+        String sourceModel=(String)ship.get("sourceModel");
+        String targetModel=(String)ship.get("targetModel");
+
+        try {
+            if(service.getRelationShip(name)!=null){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","添加资源关系重复");
+            }
+            else if(!service.addRelationShip(new RelationShip(name,descr,sourceModel,targetModel))){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","添加资源关系类型失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","添加资源关系类型失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+    /**
+     * 修改资源类型
+     * @param name
+     * @param descr
+     * @param user
+     * @return
+     */
+    @Path("/model/update")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> updateModel(@QueryParam("name") String name,@QueryParam("descr") String descr,@QueryParam("user") String user){
+        Map<String,Object> returnMap=getReturnMap();
+        if(descr==null){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","descr参数为NULL");
+            return returnMap;
+        }
+
+        ModelClass model=service.getModelByName(name);
+        if(model==null) {
+            returnMap.put("code",ERROR);
+            returnMap.put("message","不存在name为"+name+"资源类型");
+            return returnMap;
+        }
+        ModelClass tempc=service.getModelByDescr(descr);
+        if(tempc!=null && !tempc.getName().equals(model.getName())){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","资源类型名称与现有类型重复");
+            return returnMap;
+        }
+        model.setDescr(descr);
+        try {
+            if(!service.updateModel(model)){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","更新资源类型失败复");
+                return returnMap;
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","更新资源类型失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+
+    /**
+     * 修改资源属性
+     * @param user
+     * @param properties
+     * @return
+     */
+    @Path("/property/update")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> updateProperty(@QueryParam("user") String user, @RequestBody List<Map<String,Object>> properties){
+        Map<String,Object> returnMap=getReturnMap();
+        if(properties==null || properties.isEmpty()){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","待修改的资源属性为NULL");
+            return returnMap;
+        }
+
+        Property[] array=new Property[properties.size()];
+        int i=0;
+        Property temp=null;
+        for(Map<String,Object> map:properties){
+            array[i]=getProperty(map);
+            temp=service.getProperty(array[i].getModelName(),array[i].getName());
+            if(temp==null){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","待修改的资源属性不存在");
+                return returnMap;
+            }
+            i++;
+        }
+
+        try {
+            if(!service.updateProperty(array)){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","更新资源属性失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","更新资源属性失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+
+    /**
+     * 修改资源关系
+     * @param user
+     * @param ship
+     * @return
+     */
+    @Path("/relationship/update")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> updateRelationShip(@QueryParam("user") String user, @RequestBody Map<String,Object> ship){
+        Map<String,Object> returnMap=getReturnMap();
+        if(ship==null || ship.isEmpty()){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","待修改的资源资源关系类型为NULL");
+            return returnMap;
+        }
+
+        String name=(String)ship.get("name");
+        String descr=(String)ship.get("descr");
+        String sourceModel=(String)ship.get("sourceModel");
+        String targetModel=(String)ship.get("targetModel");
+
+        try {
+            if(service.getRelationShip(name)==null){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","待修改的资源关系不存在");
+            }
+            else if(!service.updateRelationShip(new RelationShip(name,descr,sourceModel,targetModel))){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","修改资源关系类型失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","修改资源关系类型失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+    /**
+     * 删除资源类型
+     * @param name
+     * @param user
+     * @return
+     */
+    @Path("/model/delete")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> updateModel(@QueryParam("name") String name,@QueryParam("user") String user){
+        Map<String,Object> returnMap=getReturnMap();
+        if(name==null){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","name参数为NULL");
+            return returnMap;
+        }
+
+        try {
+
+            if(service.getModelByName(name)==null){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","不存在name为"+name+"的资源类型");
+                return returnMap;
+            }
+
+            List<Property> list=service.getProperties(name);
+            if(list!=null){
+                service.deleteProperties(list);
+            }
+
+            List<RelationShip> list1=service.getRelationShips(name,true);
+            if(list1!=null) {
+                for(RelationShip ship:list1)
+                    service.deleteRelationShip(ship.getName());
+            }
+            list1=service.getRelationShips(name,false);
+            if(list1!=null) {
+                for(RelationShip ship:list1)
+                    service.deleteRelationShip(ship.getName());
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","删除资源类型关联信息失败:"+e.getMessage());
+            return returnMap;
+        }
+
+        try{
+            if(!service.deleteModel(name)){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","删除资源类型失败");
+                return returnMap;
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","删除资源类型失败:"+e.getMessage());
+            return returnMap;
+        }
+        return returnMap;
+    }
+
+    /**
+     * 删除资源属性
+     * @param user
+     * @param properties
+     * @return
+     */
+    @Path("/property/delete")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Map<String,Object> deleteProperty(@QueryParam("user") String user, @RequestBody List<Map<String,Object>> properties){
+        Map<String,Object> returnMap=getReturnMap();
+        if(properties==null || properties.isEmpty()){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","待修改的资源属性为NULL");
+            return returnMap;
+        }
+
+        Property[] array=new Property[properties.size()];
+        int i=0;
+        for(Map<String,Object> map:properties){
+            array[i++]=getProperty(map);
+        }
+
+        try {
+            if(!service.deleteProperties(array)){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","删除资源属性失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","删除资源属性失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+    /**
+     * 删除资源关系
+     * @param user
+     * @param name
+     * @return
+     */
+    @Path("/relationship/delete")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String,Object> deleteRelationShip(@QueryParam("user") String user, @QueryParam("name") String name){
+        Map<String,Object> returnMap=getReturnMap();
+        if(name==null){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","待修改的资源资源关系类型为NULL");
+            return returnMap;
+        }
+        if(service.getRelationShip(name)==null){
+            returnMap.put("code",ERROR);
+            returnMap.put("message","不存在name为"+name+"的资源关系");
+            return returnMap;
+        }
+
+        try {
+            if(!service.deleteRelationShip(name)){
+                returnMap.put("code",ERROR);
+                returnMap.put("message","删除资源关系失败");
+            }
+        } catch (Exception e) {
+            log.error("",e);
+            returnMap.put("code",ERROR);
+            returnMap.put("message","删除资源关系失败:"+e.getMessage());
+        }
+        return returnMap;
+    }
+
+    private Property getProperty(Map<String,Object> map){
+        Property property=new Property();
+        property.setName((String)map.get("name"));
+        property.setDescr((String)map.get("descr"));
+        property.setModelName((String)map.get("modelName"));
+        property.setGroup((String)map.get("group"));
+        property.setDefValue(map.get("defValue")+"");
+        if(map.get("rule")!=null && !map.get("rule").toString().equals("")){
+            MatchRule rule=MatchRule.valueOf(((String)map.get("rule")).toUpperCase());
+            if(rule!=null)
+                property.setRule(rule);
+        }
+        if(map.get("matchRule")!=null && !map.get("matchRule").toString().equals(""))
+            property.setMatchRule((String)map.get("matchRule"));
+        if(map.get("type")!=null)
+            property.setType(PropertyType.valueOf(((String)map.get("type")).toUpperCase()));
+        return property;
+    }
+
 
     private Map<String,String> getRelationShipMap(RelationShip ship){
         Map<String,String> map=new HashMap<>();
