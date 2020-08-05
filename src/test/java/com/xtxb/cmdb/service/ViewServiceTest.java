@@ -63,7 +63,7 @@ public class ViewServiceTest extends CmdbApplicationTest {
         list.add(iterm);
         view.setLiterms(list);
         Assert.assertTrue(service.addView(view));
-        Assert.assertTrue(service.deleteView(view));
+        Assert.assertTrue(service.deleteView(view.getType(),view.getDemo(),view.getScene(),view.getName(),view.getModelName()));
     }
 
     @Test
@@ -85,6 +85,6 @@ public class ViewServiceTest extends CmdbApplicationTest {
         map.put("sfa",list);
         view.setLiterms(map);
         Assert.assertTrue(service.addView(view));
-        Assert.assertTrue(service.deleteView(view));
+        Assert.assertTrue(service.deleteView(view.getType(),view.getDemo(),view.getScene(),view.getName(),view.getModelName()));
     }
 }
