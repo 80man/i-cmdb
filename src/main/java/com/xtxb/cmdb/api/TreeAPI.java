@@ -70,6 +70,12 @@ public class TreeAPI extends BaseAPI{
         return returnMap;
     }
 
+    /**
+     * 添加资源类型树
+     * @param user
+     * @param map
+     * @return
+     */
     @Path("/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -94,6 +100,12 @@ public class TreeAPI extends BaseAPI{
         return returnMap;
     }
 
+    /**
+     * 修改资源类型树
+     * @param user
+     * @param map
+     * @return
+     */
     @Path("/update")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -125,6 +137,12 @@ public class TreeAPI extends BaseAPI{
         return returnMap;
     }
 
+    /**
+     * 删除资源类型树
+     * @param user
+     * @param name
+     * @return
+     */
     @Path("/delete")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
