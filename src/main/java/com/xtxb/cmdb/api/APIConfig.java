@@ -2,6 +2,7 @@ package com.xtxb.cmdb.api;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
+import sun.reflect.generics.tree.Tree;
 
 /**
  * 作者: xtxb
@@ -17,5 +18,7 @@ public class APIConfig extends ResourceConfig {
         register(ResourceAPI.class);
         register(LinkAPI.class);
         register(ModelAPI.class);
+        register(TreeAPI.class);
+        register(ViewAPI.class);
     }
 }
