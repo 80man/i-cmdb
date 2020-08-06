@@ -77,6 +77,8 @@ public class ModelTreeServiceDefaultImpl implements ModelTreeService {
     public ModelClassTree getTree(String name) {
         Document doc=readDocument();
         Element treeEle=(Element)doc.selectSingleNode("/trees/tree[@name='"+name+"']");
+        if(treeEle==null)
+            return null;
         ModelClassTree tree =new ModelClassTree();
         tree.setName(name);
         tree.setCnName(treeEle.attributeValue("title"));
