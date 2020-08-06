@@ -146,8 +146,9 @@ public class ModelTreeServiceDefaultImpl implements ModelTreeService {
         if(eles==null || eles.size()==0)
             return null;
         TreeNode[] nodes=new TreeNode[eles.size()];
-        TreeNode node=new TreeNode();
+        TreeNode node=null;
         for (int i=0;i<nodes.length;i++){
+            node=new TreeNode();
             node.setLabel("true".equals(eles.get(i).attributeValue("isLabel")));
             node.setCnName(eles.get(i).attributeValue("title"));
             node.setModelClass(eles.get(i).attributeValue("name"));
