@@ -14,13 +14,13 @@ import java.util.List;
  * 列表视图
  */
 public class ViewList extends View {
-    private List<ViewIterm> literms;
+    private List<ViewIterm> iterms;
 
-    public List<ViewIterm> getLiterms() {
-        return literms;
+    public List<ViewIterm> getIterms() {
+        return iterms;
     }
 
-    public void setLiterms(List<ViewIterm> literms) {
-        this.literms = literms;
+    public void setIterms(List<ViewIterm> literms) {
+        this.iterms = literms;
     }
 }

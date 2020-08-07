@@ -122,7 +122,7 @@ public class ViewServiceDefaultImpl  implements ViewService {
             if(iterm!=null)
                 list.add(iterm);
         }
-        view.setLiterms(list);
+        view.setIterms(list);
         return view;
     }
 
@@ -352,7 +352,7 @@ public class ViewServiceDefaultImpl  implements ViewService {
         ele.addAttribute("scens",view.getScene());
 
         if(view instanceof ViewList){
-            writeProperty(ele,((ViewList)view).getLiterms());
+            writeProperty(ele,((ViewList)view).getIterms());
         }else{
             Map<String,List<ViewIterm>> map=((ViewDetail)view).getLiterms();
             Element groupEle;

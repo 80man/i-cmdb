@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 /**
  * 作者: xtxb
  * <p>
@@ -61,7 +59,7 @@ public class ViewServiceTest extends CmdbApplicationTest {
         iterm.setPtopertyType(1);
         iterm.setPropertyName("sdasdfsda");
         list.add(iterm);
-        view.setLiterms(list);
+        view.setIterms(list);
         Assert.assertTrue(service.addView(view));
         Assert.assertTrue(service.deleteView(view.getType(),view.getDemo(),view.getScene(),view.getName(),view.getModelName()));
     }
