@@ -359,7 +359,7 @@ public class ViewServiceDefaultImpl  implements ViewService {
             for (Iterator<String> iterator = map.keySet().iterator(); iterator.hasNext(); ) {
                 String groupName =  iterator.next();
                 groupEle=ele.addElement("group");
-                groupEle.attributeValue("name",groupName);
+                groupEle.addAttribute("name",groupName);
                 writeProperty(groupEle,map.get(groupName));
             }
         }
