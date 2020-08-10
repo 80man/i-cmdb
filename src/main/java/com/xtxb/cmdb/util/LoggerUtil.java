@@ -3,6 +3,7 @@ package com.xtxb.cmdb.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  * <p>
  * 对日志记录进行集中管理，便于后续改造或扩展
  */
-@Lazy
+@Scope("prototype")
 @Component
 public class LoggerUtil {
     private Logger log=null;
@@ -52,9 +53,13 @@ public class LoggerUtil {
 
 
     private void log(Type type,String msg){
+        String className="";
         if(log==null){
-            log=LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+            className=Thread.currentThread().getStackTrace()[3].getClassName();
+            log=LoggerFactory.getLogger(className);
+            className=className.substring(className.lastIndexOf(".")+1);
         }
+        msg="["+className+"] "+msg;
         if(type==Type.INFO){
             log.info(msg);
         }else if(type==Type.DEBUG){
