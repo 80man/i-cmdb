@@ -8,6 +8,6 @@ package com.xtxb.cmdb.audit;
  * <p>
  * 用于记录审计日志的API，api包中提供的外部调用api需要进行审计
  */
-public interface AuditAPI {
-    public void log(String user,String hostName,String ip,String sessionid,String note);
+public interface AuditLog{
+    public void log(String hostName,String ip,String user,String sessionid,String requestID,String type,String uri,String note);
 }
