@@ -9,12 +9,26 @@
     <group name="基本"> 
       <property index="1" title="IP地址" propertyName="ip" propertyType="1"/>  
       <property index="2" title="内存大小" propertyName="memory" propertyType="1"/> 
+    </group>  
+    <group name="基本1"> 
+      <property index="1" title="IP地址1" propertyName="ip" propertyType="1"/>  
+      <property index="2" title="内存大小1" propertyName="memory" propertyType="1"/> 
     </group> 
   </view>  
-  <view name="测试3" modelName="C_Host" type="Modify" demo="d1" scens="s1"> 
-    <group name="基本"> 
-      <property index="1" title="IP地址" propertyName="ip" propertyType="1"/>  
-      <property index="2" title="内存大小" propertyName="memory" propertyType="1"/> 
+  <view name="测试5" modelName="C_Host" type="Modify" demo="d1" scens="s1"> 
+    <group name="基本4"> 
+      <property index="1" title="IP地址1" propertyName="ip" propertyType="1"/>  
+      <property index="2" title="内存大小1" propertyName="memory" propertyType="1"/> 
     </group> 
-  </view> 
+  </view>  
+  <view name="测试5" modelName="C_Host" type="Detail" demo="d1" scens="s1">
+    <group name="基本4">
+      <property index="1" title="IP地址2" propertyName="ip" propertyType="1"/>
+      <property index="2" title="内存大小1" propertyName="memory" propertyType="1"/>
+    </group>
+    <group name="基本3">
+      <property index="1" title="IP地址" propertyName="ip" propertyType="1"/>
+      <property index="2" title="内存大小" propertyName="memory" propertyType="1"/>
+    </group>
+  </view>
 </views>
