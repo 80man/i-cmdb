@@ -22,7 +22,7 @@ public class GlobalAop extends AopBase {
     @Autowired
     private AuditLog auditLog;
 
-    @Before("execution(* com.xtxb.cmdb.api.ModelAPI.*(..))")
+    @Before("@annotation(javax.ws.rs.Path)")
     public void before(JoinPoint point) {
         HttpServletRequest request = getRequest();
         auditLog.log(getHostName(request),
@@ -35,7 +35,7 @@ public class GlobalAop extends AopBase {
                 Arrays.toString(point.getArgs()));
     }
 
-    @AfterReturning("execution(* com.xtxb.cmdb.api.ModelAPI.*(..))")
+    @AfterReturning("@annotation(javax.ws.rs.Path)\"")
     public void afterReturning(JoinPoint point) {
         HttpServletRequest request = getRequest();
         auditLog.log(getHostName(request),
@@ -48,8 +48,8 @@ public class GlobalAop extends AopBase {
                 Arrays.toString(point.getArgs()));
     }
 
-    @AfterThrowing("execution(* com.xtxb.cmdb.api.ModelAPI.*(..))")
-    public void afterThrowing(JoinPoint point) {
+    @AfterThrowing(throwing="error",pointcut="@annotation(javax.ws.rs.Path)\"")
+    public void afterThrowing(JoinPoint point,Throwable error) {
         HttpServletRequest request = getRequest();
         auditLog.log(getHostName(request),
                 getIP(request),
@@ -58,6 +58,6 @@ public class GlobalAop extends AopBase {
                 request.getRequestedSessionId(),
                 "Throw",
                 request.getRequestURI(),
-                Arrays.toString(point.getArgs()));
+                Arrays.toString(point.getArgs())+";"+error.getMessage());
     }
 }
