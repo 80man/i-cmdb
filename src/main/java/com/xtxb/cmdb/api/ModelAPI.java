@@ -458,7 +458,7 @@ public class ModelAPI  extends BaseAPI{
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Map<String,Object> updateModel(@QueryParam("name") String name,@QueryParam("user") String user){
+    public Map<String,Object> deleteModel(@QueryParam("name") String name,@QueryParam("user") String user){
         Map<String,Object> returnMap=getReturnMap();
         if(name==null){
             returnMap.put("code",ERROR);
