@@ -90,7 +90,7 @@ public class AuditLogToFile  implements AuditLog, ApplicationRunner {
     }
 
     private String format(String[] array){
-        return System.currentTimeMillis()+" "+array[5]+"  "+(array[5].equals("Start")?">>>":"<<<")+"Client:[IP:"+array[1]+"  Name:"+array[0]+" User:"+array[2]+"] SID:"+array[3]+" RID:"+array[4]+"  URI:"+array[6]+"  Msg:"+array[7];
+        return System.currentTimeMillis()+" "+array[5]+"  Client:[IP:"+array[1]+"  Name:"+array[0]+" User:"+array[2]+"] SID:"+array[3]+" RID:"+array[4]+"  URI:"+array[6]+"  Msg:"+array[7];
     }
 
 
