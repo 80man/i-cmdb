@@ -185,7 +185,6 @@ public class ModelCacheDefault implements ModelCache {
                 updateSuc=false;
                 break;
             }
-            propertiesMap.get(property.getModelName()).put(property.getName(),property);
             oldProperties.add(propertiesMap.get(property.getModelName()).put(property.getName(),property));
         }
         if(!updateSuc){
