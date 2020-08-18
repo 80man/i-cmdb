@@ -2,6 +2,7 @@ package com.xtxb.cmdb.audit;
 
 import com.xtxb.cmdb.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,9 @@ public class AuditLogToFile  implements AuditLog, ApplicationRunner {
 
     @Autowired
     private LoggerUtil log;
+
+    @Value("${cmdb.api.log.size}")
+    private int size;
 
     private LinkedList logList=new LinkedList();
     private File file=null;
@@ -104,5 +108,17 @@ public class AuditLogToFile  implements AuditLog, ApplicationRunner {
                 log.error("",e);
             }
         }
+        file=new File(System.getProperty("user.dir"));
+        File[] allFiles=file.getParentFile().listFiles();
+        File lastFile=file;
+        for(File f:allFiles){
+            if(f.isDirectory())
+                continue;
+            if(f.getName().endsWith("_api.log") && f.getName().compareTo(lastFile.getName())>0)
+                lastFile=f;
+        }
+
+        if(!lastFile.getName().equals(file.getName()))
+            lastFile.delete();
     }
 }
