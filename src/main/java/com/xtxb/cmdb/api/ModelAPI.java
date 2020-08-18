@@ -3,6 +3,7 @@ package com.xtxb.cmdb.api;
 import com.xtxb.cmdb.common.model.*;
 import com.xtxb.cmdb.service.ModelService;
 import com.xtxb.cmdb.util.LoggerUtil;
+import com.xtxb.cmdb.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,7 @@ public class ModelAPI  extends BaseAPI{
             returnMap.put("code",ERROR);
             returnMap.put("message","无法查询到"+property+"为"+value+"的资源类型");
         }else{
-            returnMap.putAll(getModelMap(model));
+            returnMap.putAll(ResourceUtil.getModelMap(model));
         }
         return returnMap;
     }
@@ -76,7 +77,7 @@ public class ModelAPI  extends BaseAPI{
         returnMap.put("list",list);
         returnMap.put("size",models.size());
         for(ModelClass model:models){
-            list.add(getModelMap(model));
+            list.add(ResourceUtil.getModelMap(model));
         }
         return returnMap;
     }
@@ -95,7 +96,7 @@ public class ModelAPI  extends BaseAPI{
 
         Property property= service.getProperty(modelName, name);
         if(property!=null)
-            returnMap.putAll(getPropertyMap(property));
+            returnMap.putAll(ResourceUtil.getPropertyMap(property));
         else{
             returnMap.put("code",ERROR);
             returnMap.put("message","无法查询到资源类型为"+modelName+",名称为"+name+"的资源属性");
@@ -122,7 +123,7 @@ public class ModelAPI  extends BaseAPI{
                 List<Map<String,String>> list=new ArrayList<>();
                 returnMap.put("list",list);
                 for(Property property:propertes)
-                    list.add(getPropertyMap(property));
+                    list.add(ResourceUtil.getPropertyMap(property));
             }else{
                 returnMap.put("code",ERROR);
                 returnMap.put("message","无法查询到资源类型为"+modelName+"的资源属性");
@@ -150,7 +151,7 @@ public class ModelAPI  extends BaseAPI{
 
         RelationShip ship= service.getRelationShip(name);
         if(ship!=null)
-            returnMap.putAll(getRelationShipMap(ship));
+            returnMap.putAll(ResourceUtil.getRelationShipMap(ship));
         else{
             returnMap.put("code",ERROR);
             returnMap.put("message","无法查询到名称为"+name+"的资源关系定义");
@@ -181,7 +182,7 @@ public class ModelAPI  extends BaseAPI{
                 List<Map<String,String>> list=new ArrayList<>();
                 returnMap.put("list",list);
                 for(RelationShip ship:ships)
-                    list.add(getRelationShipMap(ship));
+                    list.add(ResourceUtil.getRelationShipMap(ship));
             }else{
                 returnMap.put("code",ERROR);
                 returnMap.put("message","无法查询到资源类型为"+modelName+"的相关资源关系定义");
@@ -253,7 +254,7 @@ public class ModelAPI  extends BaseAPI{
         Property[] array=new Property[properties.size()];
         int i=0;
         for(Map<String,Object> map:properties){
-            array[i]=getProperty(map);
+            array[i]=ResourceUtil.getProperty(map);
             if(service.getProperty(array[i].getModelName(),array[i].getName())!=null){
                 returnMap.put("code",ERROR);
                 returnMap.put("message","待添加的资源属性与现有属性重复");
@@ -384,7 +385,7 @@ public class ModelAPI  extends BaseAPI{
         int i=0;
         Property temp=null;
         for(Map<String,Object> map:properties){
-            array[i]=getProperty(map);
+            array[i]=ResourceUtil.getProperty(map);
             temp=service.getProperty(array[i].getModelName(),array[i].getName());
             if(temp==null){
                 returnMap.put("code",ERROR);
@@ -532,7 +533,7 @@ public class ModelAPI  extends BaseAPI{
         Property[] array=new Property[properties.size()];
         int i=0;
         for(Map<String,Object> map:properties){
-            array[i++]=getProperty(map);
+            array[i++]= ResourceUtil.getProperty(map);
         }
 
         try {
@@ -581,55 +582,5 @@ public class ModelAPI  extends BaseAPI{
             returnMap.put("message","删除资源关系失败:"+e.getMessage());
         }
         return returnMap;
-    }
-
-    private Property getProperty(Map<String,Object> map){
-        Property property=new Property();
-        property.setName((String)map.get("name"));
-        property.setDescr((String)map.get("descr"));
-        property.setModelName((String)map.get("modelName"));
-        property.setGroup((String)map.get("group"));
-        property.setDefValue(map.get("defValue")+"");
-        if(map.get("rule")!=null && !map.get("rule").toString().equals("")){
-            MatchRule rule=MatchRule.valueOf(((String)map.get("rule")).toUpperCase());
-            if(rule!=null)
-                property.setRule(rule);
-        }
-        if(map.get("matchRule")!=null && !map.get("matchRule").toString().equals(""))
-            property.setMatchRule((String)map.get("matchRule"));
-        if(map.get("type")!=null)
-            property.setType(PropertyType.valueOf(((String)map.get("type")).toUpperCase()));
-        return property;
-    }
-
-
-    private Map<String,String> getRelationShipMap(RelationShip ship){
-        Map<String,String> map=new HashMap<>();
-        map.put("name",ship.getName());
-        map.put("descr",ship.getDescr());
-        map.put("sourceModel",ship.getSourceModel());
-        map.put("targetModel",ship.getTargetModel());
-        return map;
-    }
-
-
-    private Map<String,String> getPropertyMap(Property property){
-        Map<String,String> map=new HashMap<>();
-        map.put("name",property.getName());
-        map.put("descr",property.getDescr());
-        map.put("modelName",property.getModelName());
-        map.put("group",property.getGroup());
-        map.put("defValue",property.getDefValue());
-        map.put("rule",property.getRule()!=null?property.getRule().name():null);
-        map.put("matchRule",property.getMatchRule());
-        map.put("type",property.getType().name());
-        return map;
-    }
-
-    private Map<String,String> getModelMap(ModelClass model){
-        Map<String,String> map=new HashMap<>();
-        map.put("name",model.getName());
-        map.put("descr",model.getDescr());
-        return map;
     }
 }
