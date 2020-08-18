@@ -86,13 +86,17 @@ public class ResourceCacheDefault implements ResourceCache{
      * @throws Exception
      */
     @Override
-    public boolean updateResources(String user, List<Resource> resources) throws Exception {
+    public synchronized boolean updateResources(String user, List<Resource> resources) throws Exception {
         String sid=null;
+        Resource oldRes=null;
         for (Resource resource : resources) {
-            sid=oidMap.get(resource.getOid()).getSid();
-            oidMap.get(resource.getOid()).setValues(resource.getValues());
-            sidMap.put(resource.getSid(),sidMap.remove(sid));
-            sidMap.get(resource.getSid()).setValues(resource.getValues());
+            oldRes=oidMap.get(resource.getOid());
+            sid=oldRes.getSid();
+            oldRes.setSid(resource.getSid());
+            oldRes.setValues(resource.getValues());
+            oidMap.put(oldRes.getOid(),oldRes);
+            sidMap.remove(sid);
+            sidMap.put(oldRes.getSid(),oldRes);
         }
         return true;
     }
@@ -106,7 +110,7 @@ public class ResourceCacheDefault implements ResourceCache{
      * @throws Exception
      */
     @Override
-    public boolean addResources(String user, List<Resource> resources) throws Exception {
+    public synchronized boolean addResources(String user, List<Resource> resources) throws Exception {
         for (Resource resource : resources) {
             oidMap.put(resource.getOid(), resource);
             sidMap.put(resource.getSid(), resource);
@@ -123,7 +127,7 @@ public class ResourceCacheDefault implements ResourceCache{
      * @throws Exception
      */
     @Override
-    public boolean deleteResources(String user, List<Resource> resources) throws Exception {
+    public synchronized boolean deleteResources(String user, List<Resource> resources) throws Exception {
         for (Resource resource : resources) {
             oidMap.remove(resource.getOid());
             sidMap.remove(resource.getSid());

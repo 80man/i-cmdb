@@ -35,8 +35,8 @@ public class GlobalAop extends AopBase {
                 Arrays.toString(point.getArgs()));
     }
 
-    @AfterReturning("@annotation(javax.ws.rs.Path)\"")
-    public void afterReturning(JoinPoint point) {
+    @AfterReturning(returning="result", pointcut="@annotation(javax.ws.rs.Path)\"")
+    public void afterReturning(Object result) {
         HttpServletRequest request = getRequest();
         auditLog.log(getHostName(request),
                 getIP(request),
@@ -45,7 +45,7 @@ public class GlobalAop extends AopBase {
                 request.getRequestedSessionId(),
                 "End",
                 request.getRequestURI(),
-                Arrays.toString(point.getArgs()));
+                result.toString());
     }
 
     @AfterThrowing(throwing="error",pointcut="@annotation(javax.ws.rs.Path)\"")

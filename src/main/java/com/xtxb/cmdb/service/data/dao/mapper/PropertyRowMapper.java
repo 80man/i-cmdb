@@ -28,19 +28,19 @@ public class PropertyRowMapper implements RowMapper<Property> {
         property.setModelName(resultSet.getString("PNAME"));
         int type=resultSet.getInt("PTYPE");
         if(type==1)
-            property.setType(PropertyType.STRING);
+            property.setType(PropertyType.BOOLEAN);
         else if(type==2)
-            property.setType(PropertyType.LONG);
+            property.setType(PropertyType.STRING);
         else if(type==3)
-            property.setType(PropertyType.FLOAT);
+            property.setType(PropertyType.LONG);
         else if(type==4)
-            property.setType(PropertyType.TIME);
+            property.setType(PropertyType.FLOAT);
         else if(type==5)
+            property.setType(PropertyType.TIME);
+        else if(type==6)
             property.setType(PropertyType.DATE);
         else if(type==6)
             property.setType(PropertyType.DATETIE);
-        else if(type==6)
-            property.setType(PropertyType.BOOLEAN);
         property.setDefValue(resultSet.getString("DEFVALUE"));
         int rule=resultSet.getInt("MATCHRULE");
         if(rule==1){

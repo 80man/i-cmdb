@@ -294,16 +294,19 @@ public class ResourceAPI extends BaseAPI{
             returnMap.put("message","资源实例时必须声明资源类型和为一标识!");
             return null;
         }
-        res.setModelName((String) value.remove("modelName"));
+        res.setModelName((String) value.get("modelName"));
         if(value.containsKey("oid")) {
-            res.setOid(Long.parseLong(value.remove("oid")+""));
+            res.setOid(Long.parseLong(value.get("oid")+""));
         }
-        res.setSid((String)value.remove("sid"));
+        res.setSid((String)value.get("sid"));
         PropertyType type;
         for (Iterator<String> iterator = value.keySet().iterator(); iterator.hasNext(); ) {
             String propertyName =  iterator.next();
-            type=mservice.getProperty(res.getModelName(),propertyName).getType();
-            res.setValue(propertyName,ResourceUtil.convertValueToStore(value.get(propertyName),type));
+            if(propertyName.equals("sid") || propertyName.equals("oid") || propertyName.equals("modelName"))
+               continue;
+           type = mservice.getProperty(res.getModelName(), propertyName).getType();
+           res.setValue(propertyName, ResourceUtil.convertValueToStore(value.get(propertyName), type));
+
         }
         return res;
     }

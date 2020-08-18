@@ -51,15 +51,7 @@ public class ModelAop extends AopBase {
             result=point.proceed();
             Map<String,Object> obj=(Map<String,Object>)result;
             if(obj!=null&& "1".equals(obj.get("code")+"") ){
-                auditLog.log(
-                        getHostName(request),
-                        getIP(request),
-                        request.getRemoteUser(),
-                        request.getSession().getId(),
-                        request.getRequestedSessionId(),
-                        "Value",
-                        request.getRequestURI(),
-                        "资源类型:"+args[0]+" 的名称由:"+descr+"更新为:"+args[1]);
+                log(auditLog,request,"资源类型:"+args[0]+" 的名称由:"+descr+"更新为:"+args[1]);
             }
         } catch (Throwable throwable) {
             log.error("",throwable);
@@ -72,14 +64,11 @@ public class ModelAop extends AopBase {
         HttpServletRequest request = getRequest();
         Object[] args=point.getArgs();
         List<Map<String,Object>> properties=(List<Map<String,Object>>)args[1];
-        List<Map<String,String>> properties_old=new ArrayList<>();
-        Property temp=null;
-        for (Map<String, Object> property : properties) {
-            temp=service.getProperty((String)property.get("modelName"),(String)property.get("name"));
-            if(temp!=null)
-                properties_old.add(ResourceUtil.getPropertyMap(temp));
-            else
-                properties_old.add(null);
+        List<Property> properties_old=new ArrayList<>();
+        if(properties!=null) {
+            for (Map<String, Object> property : properties) {
+                properties_old.add(service.getProperty((String) property.get("modelName"), (String) property.get("name")));
+            }
         }
         Object result=null;
         try {
@@ -88,36 +77,45 @@ public class ModelAop extends AopBase {
             if(obj!=null&& "1".equals(obj.get("code")+"") ){
                 StringBuilder sb= new StringBuilder("");
                 StringBuilder sb_sub=null;
+                Property property=null;
                 for(int i=0;i<properties_old.size();i++){
-                    if(properties_old.get(i)==null)
+                    property=properties_old.get(i);
+                    if(property==null)
                         continue;
-                    sb_sub= new StringBuilder(properties_old.get(i).get("name")+"[");
-                    for (Iterator<String> iterator = properties_old.get(i).keySet().iterator(); iterator.hasNext(); ) {
-                        String pro =  iterator.next();
-                        if(pro.equals("type"))
-                            continue;
-                        String old_value=properties_old.get(i).get(pro);
-                        if(properties.get(i).containsKey(pro)){
-                            Object new_value=properties.get(i).get(pro);
-                            if(old_value==null && new_value!=null){
-                                sb_sub.append(pro+": null -> "+new_value+", ");
-                            }else if(old_value!=null && !old_value.equals(new_value))
-                                sb_sub.append(pro+": "+(old_value.equals("")?"null":old_value)+" -> "+new_value+", ");
-                        }
+                    sb_sub= new StringBuilder(property.getName()+"[");
+                    if(!property.getDescr().equals(properties.get(i).get("descr"))){
+                        sb_sub.append("名称: "+property.getDescr()+" -> "+properties.get(i).get("descr")+", ");
                     }
+                    if(!property.getGroup().equals(properties.get(i).get("group"))){
+                        sb_sub.append("属性组: "+property.getGroup()+" -> "+properties.get(i).get("group")+", ");
+                    }
+
+                    if(property.getRule()==null && properties.get(i).get("rule")!=null){
+                        sb_sub.append("约束: null -> "+properties.get(i).get("rule")+", ");
+                    }
+                    if(property.getRule()!=null && !property.getRule().name().equalsIgnoreCase((String)properties.get(i).get("rule"))){
+                        sb_sub.append("约束: "+property.getRule().name()+" -> "+properties.get(i).get("rule")+", ");
+                    }
+
+                    if(property.getMatchRule()==null && properties.get(i).get("matchRule")!=null){
+                        sb_sub.append("约束值: null -> "+properties.get(i).get("matchRule")+", ");
+                    }
+                    if(property.getMatchRule()!=null && !property.getMatchRule().equals(properties.get(i).get("matchRule"))){
+                        sb_sub.append("约束值: "+property.getMatchRule()+" -> "+properties.get(i).get("matchRule")+", ");
+                    }
+
+                    if(property.getDefValue()==null && properties.get(i).get("defValue")!=null){
+                        sb_sub.append("默认值: null -> "+properties.get(i).get("defValue")+", ");
+                    }
+                    if(property.getDefValue()!=null && !property.getDefValue().equals(properties.get(i).get("defValue"))){
+                        sb_sub.append("默认值: "+property.getMatchRule()+" -> "+properties.get(i).get("defValue")+", ");
+                    }
+
                     if(!sb_sub.toString().endsWith("[")){
                         sb.append(sb_sub.substring(0,sb_sub.length()-2)+"];");
                     }
                 }
-                auditLog.log(
-                        getHostName(request),
-                        getIP(request),
-                        request.getRemoteUser(),
-                        request.getSession().getId(),
-                        request.getRequestedSessionId(),
-                        "Value",
-                        request.getRequestURI(),
-                        "批量更新:"+sb.substring(0,sb.length()-1));
+                log(auditLog,request,"批量更新:"+(sb.length()>0?sb.substring(0,sb.length()-1):""));
             }
         } catch (Throwable throwable) {
             log.error("",throwable);

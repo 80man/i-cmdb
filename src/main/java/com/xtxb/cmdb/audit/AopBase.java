@@ -1,5 +1,6 @@
 package com.xtxb.cmdb.audit;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
  * 对外部API进行统一拦截
  */
 public abstract class AopBase {
-
 
     public HttpServletRequest getRequest(){
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
@@ -35,4 +35,16 @@ public abstract class AopBase {
         return request.getRemoteHost();
     }
 
+
+    public void log(AuditLog auditLog,HttpServletRequest request ,String note){
+        auditLog.log(
+                getHostName(request),
+                getIP(request),
+                request.getRemoteUser(),
+                request.getSession().getId(),
+                request.getRequestedSessionId(),
+                "Value",
+                request.getRequestURI(),
+                note);
+    }
 }
